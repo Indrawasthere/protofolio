@@ -1,366 +1,714 @@
-import { Github, Twitter, Mail, ArrowUpRight, Code2, Cpu, Globe, Layers, ChevronDown } from "lucide-react";
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import ParticleBackground from './components/ParticleBackground';
-
-const AVATAR_URL = "https://codebanana-1308581983.cos.na-siliconvalley.myqcloud.com/generated_images/20251218/192038/img_20251218192018_93368.png";
+import {
+  Github,
+  Mail,
+  ExternalLink,
+  Linkedin,
+  FileText,
+  Menu,
+  X,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// --- Data --- 
+// --- Data ---
 
-const WORKS = [
+const EXPERIENCES = [
   {
     id: 1,
-    title: "Nebula Dashboard",
-    description: "AI-powered analytics platform for SaaS growth.",
-    tech: ["Next.js", "Tailwind", "OpenAI"],
-    link: "#",
-    icon: <Layers size={20} />,
-    color: "bg-indigo-500/10 text-indigo-400",
-    image: "https://codebanana-1308581983.cos.na-siliconvalley.myqcloud.com/generated_images/20251218/193019/img_20251218193011_56201.png"
+    title: "Internal IT",
+    company: "Atreus Global",
+    period: "2025 — Present",
+    description:
+      "Building scalable web applications with React, TypeScript, and modern tooling. Leading frontend architecture decisions and mentoring junior developers.",
+    skills: ["React", "TypeScript", "Next.js", "Tailwind", "GraphQL"],
   },
   {
     id: 2,
-    title: "Zenith UI Kit",
-    description: "A comprehensive React component library for enterprise.",
-    tech: ["React", "TypeScript", "Storybook"],
-    link: "#",
-    icon: <Code2 size={20} />,
-    color: "bg-emerald-500/10 text-emerald-400",
-    image: "https://codebanana-1308581983.cos.na-siliconvalley.myqcloud.com/generated_images/20251218/193036/img_20251218193019_2578.png"
+    title: "Software Engineer",
+    company: "Rupa Aestetika Teknologi Aktual",
+    period: "2024 — 2025",
+    description:
+      "Developed responsive websites and web applications for various clients. Collaborated with designers and backend teams to deliver pixel-perfect interfaces.",
+    skills: ["JavaScript", "React", "Vue.js", "SCSS", "REST API"],
   },
   {
     id: 3,
-    title: "CryptoWatch",
-    description: "Real-time cryptocurrency tracking mobile application.",
-    tech: ["React Native", "GraphQL"],
-    link: "#",
-    icon: <Cpu size={20} />,
-    color: "bg-amber-500/10 text-amber-400",
-    image: "https://codebanana-1308581983.cos.na-siliconvalley.myqcloud.com/generated_images/20251218/193045/img_20251218193036_15374.png"
+    title: "DevOps Engineer",
+    company: "Wahana Datarindo Sempurna",
+    period: "2023 — 2024",
+    description:
+      "Started my career building websites and learning modern web technologies. Worked on multiple projects ranging from landing pages to full-stack applications.",
+    skills: ["HTML", "CSS", "JavaScript", "jQuery", "PHP"],
+  },
+];
+
+const PROJECTS = [
+  {
+    id: 1,
+    title: "Sipakat-PBJ",
+    description:
+      "Integrated monitoring system for government procurement processes with real-time analytics, audit tracking, and collaborative vendor management.",
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80",
+    tags: ["React", "TypeScript", "Tailwind", "ApexCharts"],
+    github: "https://github.com/Indrawasthere/spkmb",
+    external: "#",
+  },
+  {
+    id: 2,
+    title: "ProveIT",
+    description:
+      "Multi-layer approval workflow system with Google Drive integration, real-time notifications, and comprehensive document management.",
+    image:
+      "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=800&q=80",
+    tags: ["Next.js", "Prisma", "PostgreSQL", "NextAuth"],
+    github: "https://github.com/Indrawasthere/approvalsystem",
+    external: "#",
+  },
+  {
+    id: 3,
+    title: "Hyra",
+    description:
+      "AI-powered HRIS with Ollama integration for salary recommendations, attendance analytics, and automated CV screening.",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+    tags: ["FastAPI", "React", "MongoDB", "Ollama"],
+    github: "https://github.com/Indrawasthere/hyra",
+    external: "#",
   },
   {
     id: 4,
-    title: "Global Reach",
-    description: "Localization engine for static site generators.",
-    tech: ["Rust", "WASM"],
-    link: "#",
-    icon: <Globe size={20} />,
-    color: "bg-rose-500/10 text-rose-400",
-    image: "https://codebanana-1308581983.cos.na-siliconvalley.myqcloud.com/generated_images/20251218/193054/img_20251218193046_19567.png"
-  }
+    title: "Orca POS",
+    description:
+      "Enterprise-grade POS system with kitchen display, multi-role support, and AI-enhanced development using Claude Sonnet 4.",
+    image:
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80",
+    tags: ["Golang", "TanStack", "PostgreSQL", "Docker"],
+    github: "https://github.com/Indrawasthere/pointsale",
+    external: "#",
+  },
+  {
+    id: 5,
+    title: "SweetCommerce",
+    description:
+      "Modern e-commerce platform with beautiful UI components, built with Lovable and optimized for performance.",
+    image:
+      "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    tags: ["React", "TypeScript", "Vite", "Shadcn"],
+    github: "https://github.com/Indrawasthere/sweetcommerce",
+    external:
+      "https://lovable.dev/projects/6281a7d8-f17d-43cd-8628-4826d2ed73a0",
+  },
 ];
 
-const POSTS = [
-  {
-    id: 1,
-    title: "The Art of Invisible Design",
-    date: "2025-12-12",
-    excerpt: "Why the best interfaces are the ones you don't notice. Exploring the psychology behind seamless user interactions.",
-    tags: ["Design", "UX"]
-  },
-  {
-    id: 2,
-    title: "Modern State Management",
-    date: "2025-11-28",
-    excerpt: "Moving beyond Redux. A look at Zustand, Jotai, and React Context in 2025.",
-    tags: ["Dev", "React"]
-  },
-  {
-    id: 3,
-    title: "Why I Chose TypeScript",
-    date: "2025-11-15",
-    excerpt: "A deep dive into type safety and how it dramatically improves developer velocity in large teams.",
-    tags: ["TypeScript"]
-  }
+const NAV_ITEMS = [
+  { id: "about", label: "About", number: "" },
+  { id: "experience", label: "Experience", number: "" },
+  { id: "work", label: "Work", number: "" },
+  { id: "contact", label: "Contact", number: "" },
 ];
 
 // --- Components ---
 
-export default function App() {
+function GradientOrbs() {
   return (
-    <div className="h-screen w-full bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 overflow-y-scroll snap-y snap-mandatory scroll-smooth">
-      {/* Fixed Background */}
-      <div className="fixed inset-0 z-0">
-        <ParticleBackground />
-      </div>
-      
-      {/* Fixed Header/Nav (Optional) */}
-      <nav className="fixed top-0 left-0 w-full p-6 z-50 flex justify-between items-center mix-blend-difference pointer-events-none">
-        <span className="font-bold text-xl tracking-tighter text-slate-200">AM.</span>
-        <div className="flex gap-4 pointer-events-auto">
-          <SocialLink href="#" icon={<Github size={20} />} label="GitHub" />
-          <SocialLink href="#" icon={<Twitter size={20} />} label="Twitter" />
-        </div>
-      </nav>
-
-      {/* 1. Hero Section */}
-      <PageSection>
-        <motion.div 
-          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: false, margin: "-20%" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-3xl w-full flex flex-col-reverse md:flex-row gap-12 items-center md:items-start justify-between"
-        >
-          <div className="space-y-8 max-w-lg text-center md:text-left">
-            <div className="space-y-4">
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                Open to work
-              </motion.div>
-              <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
-                Alex Morgan
-              </h1>
-              <p className="text-xl text-slate-400 font-medium">
-                Design Engineer & <br/> Creative Developer
-              </p>
-            </div>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              Crafting digital experiences at the intersection of 
-              <span className="text-indigo-400 font-medium"> art</span> and 
-              <span className="text-emerald-400 font-medium"> code</span>.
-            </p>
-            <div className="flex gap-5 justify-center md:justify-start">
-              <button className="px-6 py-3 rounded-full bg-white text-slate-900 font-semibold hover:bg-slate-200 transition-colors">
-                Contact Me
-              </button>
-              <button className="px-6 py-3 rounded-full border border-slate-700 text-slate-300 hover:bg-slate-800 transition-colors">
-                View Work
-              </button>
-            </div>
-          </div>
-
-          <motion.div 
-            whileHover={{ scale: 1.05, rotate: 2 }}
-            className="relative w-48 h-48 md:w-64 md:h-64 shrink-0"
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-emerald-500 rounded-full blur-3xl opacity-30 animate-pulse" />
-            <img
-              src={AVATAR_URL}
-              alt="Alex Morgan"
-              className="relative w-full h-full object-cover rounded-full border-4 border-slate-900/50 shadow-2xl"
-            />
-          </motion.div>
-        </motion.div>
-
-        <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500"
-        >
-          <ChevronDown />
-        </motion.div>
-      </PageSection>
-
-      {/* 2. Works Section */}
-      <PageSection>
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, margin: "-20%" }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl w-full space-y-12"
-        >
-          <SectionTitle>Selected Works</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {WORKS.map((work, index) => (
-              <motion.div
-                key={work.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-              >
-                <WorkCard work={work} />
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </PageSection>
-
-      {/* 3. Writing Section */}
-      <PageSection>
-        <motion.div
-           initial={{ opacity: 0, scale: 0.9 }}
-           whileInView={{ opacity: 1, scale: 1 }}
-           viewport={{ once: false }}
-           transition={{ duration: 0.6 }}
-           className="max-w-3xl w-full space-y-12"
-        >
-          <SectionTitle>Recent Thoughts</SectionTitle>
-          <div className="space-y-8">
-            {POSTS.map((post, index) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-              >
-                <ArticleCard post={post} />
-              </motion.div>
-            ))}
-          </div>
-          <div className="pt-8 flex justify-center">
-             <a href="#" className="text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-2">
-                Read Archive <ArrowUpRight size={16} />
-             </a>
-          </div>
-        </motion.div>
-      </PageSection>
-
-      {/* 4. Contact/Footer Section */}
-      <PageSection>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.8 }}
-          className="max-w-2xl w-full text-center space-y-12"
-        >
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Let's build something <br/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-emerald-400">
-                extraordinary
-              </span>
-            </h2>
-            <p className="text-xl text-slate-400">
-              I'm currently available for freelance projects and open source collaborations.
-            </p>
-          </div>
-          
-          <a 
-            href="mailto:hello@example.com" 
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-slate-900 font-bold text-lg hover:bg-indigo-50 transition-all hover:scale-105"
-          >
-            <Mail className="text-indigo-600" />
-            Say Hello
-          </a>
-
-          <footer className="pt-24 flex flex-col gap-4 items-center text-slate-600 text-sm">
-             <div className="flex gap-8">
-               <FooterLink href="#">Twitter</FooterLink>
-               <FooterLink href="#">LinkedIn</FooterLink>
-               <FooterLink href="#">GitHub</FooterLink>
-             </div>
-             <p>© 2025 Alex Morgan. Crafted with ❤️ and CodeBanana.</p>
-          </footer>
-        </motion.div>
-      </PageSection>
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <motion.div
+        className="absolute -top-40 -left-40 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-1/4 -right-40 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        animate={{
+          x: [0, -80, 0],
+          y: [0, 80, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -bottom-40 left-1/3 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        animate={{
+          x: [0, 60, 0],
+          y: [0, -60, 0],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        animate={{
+          x: [0, -70, 0],
+          y: [0, 70, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
     </div>
   );
 }
 
-// --- Helper Components ---
+function Header({
+  activeSection,
+  scrollToSection,
+}: {
+  activeSection: string;
+  scrollToSection: (id: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-function PageSection({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <section className="relative z-10 min-h-screen w-full flex items-center justify-center p-6 md:p-12 snap-start">
-      {children}
-    </section>
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled ? "bg-white/80 backdrop-blur-lg shadow-sm" : "bg-transparent",
+      )}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+        <motion.button
+          onClick={() => scrollToSection("hero")}
+          whileHover={{ scale: 1.05 }}
+          className="text-2xl font-bold bg-linear-to-r from-purple-600 to-rose-500 bg-clip-text text-transparent"
+        >
+          F.
+        </motion.button>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
+          {NAV_ITEMS.map((item) => (
+            <motion.button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              whileHover={{ y: -2 }}
+              className={cn(
+                "text-sm font-medium transition-colors",
+                activeSection === item.id
+                  ? "text-purple-600"
+                  : "text-gray-700 hover:text-purple-600",
+              )}
+            >
+              <span className="text-purple-500 mr-1">{item.number}.</span>
+              {item.label}
+            </motion.button>
+          ))}
+          <motion.a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-4 py-2 border-2 border-purple-500 text-purple-600 rounded hover:bg-purple-50 transition-colors flex items-center gap-2"
+          >
+            <FileText size={16} />
+            Resume
+          </motion.a>
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-gray-700 hover:text-purple-600 transition-colors"
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Navigation */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200"
+          >
+            <nav className="px-6 py-6 space-y-4">
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    scrollToSection(item.id);
+                    setIsOpen(false);
+                  }}
+                  className="block w-full text-left text-gray-700 hover:text-purple-600 transition-colors"
+                >
+                  <span className="text-purple-500 mr-2">{item.number}.</span>
+                  {item.label}
+                </button>
+              ))}
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center px-4 py-2 border-2 border-purple-500 text-purple-600 rounded hover:bg-purple-50 transition-colors"
+              >
+                Resume
+              </a>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function NumberedHeading({
+  number,
+  children,
+}: {
+  number: string;
+  children: React.ReactNode;
+}) {
   return (
-    <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest flex items-center gap-3">
-      <span className="w-8 h-[2px] rounded-full bg-indigo-500" />
-      {children}
+    <h2 className="flex items-center gap-4 text-2xl md:text-3xl font-bold text-gray-800 mb-12">
+      <span className="text-purple-500 font-mono text-xl">{number}.</span>
+      <span>{children}</span>
+      <div className="flex-1 h-px bg-linear-to-r from-gray-300 to-transparent ml-4" />
     </h2>
   );
 }
 
-function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
-  return (
-    <a 
-      href={href} 
-      className="text-slate-400 hover:text-white transition-colors p-2 bg-slate-800/50 rounded-full hover:bg-slate-800"
-      aria-label={label}
-    >
-      {icon}
-    </a>
-  );
-}
+export default function App() {
+  const [activeSection, setActiveSection] = useState("about");
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["about", "experience", "work", "contact"];
+      const scrollPosition = window.scrollY + 300;
 
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a href={href} className="hover:text-indigo-400 transition-colors font-medium">
-      {children}
-    </a>
-  );
-}
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
 
-function WorkCard({ work }: { work: typeof WORKS[0] }) {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    if (id === "hero") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <a 
-      href={work.link}
-      className="group block rounded-3xl bg-slate-900/40 border border-slate-800 hover:border-indigo-500/30 hover:bg-slate-900/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 backdrop-blur-sm overflow-hidden"
-    >
-      <div className="aspect-video w-full overflow-hidden border-b border-slate-800/50">
-        <img 
-          src={work.image} 
-          alt={work.title} 
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div className={cn("p-2 rounded-lg bg-slate-800/50 text-slate-400", work.color.split(' ')[1])}>
-            {work.icon}
-          </div>
-          <ArrowUpRight className="text-slate-600 group-hover:text-white transition-colors" size={20} />
-        </div>
-        <h3 className="text-xl font-bold text-slate-200 group-hover:text-white mb-2">
-          {work.title}
-        </h3>
-        <p className="text-slate-400 leading-relaxed text-sm mb-4">
-          {work.description}
-        </p>
-        <div className="flex gap-2 flex-wrap">
-          {work.tech.map(t => (
-            <span key={t} className="text-xs font-medium text-slate-500 bg-slate-950/50 px-3 py-1.5 rounded-full border border-slate-800">
-              {t}
-            </span>
+    <div className="min-h-screen bg-linear-to-br from-purple-50 via-rose-50 to-blue-50 text-gray-800">
+      <GradientOrbs />
+      <Header activeSection={activeSection} scrollToSection={scrollToSection} />
+
+      {/* Side Navigation with Labels */}
+      <nav className="hidden xl:flex fixed left-12 top-0 bottom-0 items-center z-40">
+        <div className="space-y-10">
+          {NAV_ITEMS.map((item) => (
+            <motion.button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className="group flex items-center gap-4"
+              whileHover={{ x: 5 }}
+            >
+              <motion.div
+                className={cn(
+                  "h-0.5 rounded-full transition-all duration-300",
+                  activeSection === item.id
+                    ? "bg-purple-500 w-16"
+                    : "bg-gray-400 w-12 group-hover:bg-purple-400 group-hover:w-14",
+                )}
+              />
+              <span
+                className={cn(
+                  "text-xs font-medium uppercase tracking-wider transition-all duration-300",
+                  activeSection === item.id
+                    ? "text-purple-600 opacity-100"
+                    : "text-gray-500 opacity-0 group-hover:opacity-100",
+                )}
+              >
+                {item.label}
+              </span>
+            </motion.button>
           ))}
         </div>
-      </div>
-    </a>
-  );
-}
+      </nav>
 
-function ArticleCard({ post }: { post: typeof POSTS[0] }) {
-  return (
-    <article className="group cursor-pointer p-6 rounded-2xl border border-transparent hover:border-slate-800 hover:bg-slate-900/40 transition-all duration-300">
-      <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-4 mb-3">
-        <h3 className="text-2xl font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">
-          {post.title}
-        </h3>
-        <time className="text-sm text-slate-500 font-mono tabular-nums shrink-0 px-3 py-1 rounded-full bg-slate-900/50">
-          {post.date}
-        </time>
-      </div>
-      <p className="text-slate-400 leading-relaxed text-lg mb-4 max-w-2xl">
-        {post.excerpt}
-      </p>
-      <div className="flex gap-3">
-        {post.tags.map(tag => (
-          <span key={tag} className="text-sm text-indigo-400/80 font-medium hover:text-indigo-300">#{tag}</span>
+      {/* Social Links */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="hidden lg:flex fixed right-12 bottom-0 flex-col items-center gap-6 pb-8 z-40"
+      >
+        {[
+          {
+            icon: <Github size={20} />,
+            href: "https://github.com/Indrawasthere",
+            label: "GitHub",
+          },
+          {
+            icon: <Linkedin size={20} />,
+            href: "https://www.linkedin.com/in/muhammadfadlanh/",
+            label: "LinkedIn",
+          },
+          { icon: <Mail size={20} />, href: "#", label: "Email" },
+        ].map((social) => (
+          <motion.a
+            key={social.label}
+            href={social.href}
+            whileHover={{ y: -3, scale: 1.1 }}
+            className="text-gray-600 hover:text-purple-500 transition-colors"
+            aria-label={social.label}
+          >
+            {social.icon}
+          </motion.a>
         ))}
-      </div>
-    </article>
+        <div className="w-px h-24 bg-linear-to-b from-gray-400 to-transparent" />
+      </motion.div>
+
+      {/* Main Content */}
+      <main className="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
+        {/* Hero Section */}
+        <motion.section
+          id="hero"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="min-h-screen flex flex-col justify-center pt-20"
+        >
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-purple-500 font-mono mb-6 text-sm md:text-base"
+          >
+            Hi, my name is
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 text-gray-900"
+          >
+            Muhammad Fadlan.
+          </motion.h1>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-2xl md:text-2xl lg:text-5xl font-bold mb-8 text-gray-600"
+          >
+            Just a guy who addicted with code.
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg text-gray-600 max-w-2xl leading-relaxed mb-12"
+          >
+            I'm a software engineer specializing in building exceptional digital
+            experiences. Currently, I'm focused on building accessible,
+            human-centered products.
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 10px 40px rgba(168, 85, 247, 0.2)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => scrollToSection("work")}
+            className="px-8 py-4 border-2 border-purple-500 text-purple-600 rounded font-mono hover:bg-purple-50 transition-all w-fit shadow-lg"
+          >
+            Check out my work!
+          </motion.button>
+        </motion.section>
+
+        {/* About Section */}
+        <section id="about" className="min-h-screen py-24">
+          <NumberedHeading number="">About Me</NumberedHeading>
+
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="md:col-span-2 space-y-6 text-gray-700 leading-relaxed">
+              <p>
+                Hello! I'm Fadlan, a software engineer based in Jakarta,
+                Indonesia. I enjoy creating things that live on the internet,
+                whether that be websites, applications, or anything in between.
+              </p>
+
+              <p>
+                My interest in web development started back in 2019 when I
+                decided to try editing custom themes — turns out hacking
+                together a custom theme taught me a lot about HTML & CSS!
+              </p>
+
+              <p>
+                Fast-forward to today, and I've had the privilege of working at
+                a start-up, a huge corporation, and a digital agency. My main
+                focus these days is building accessible, inclusive products and
+                digital experiences.
+              </p>
+
+              <p className="text-gray-600">
+                Here are a few technologies I've been working with recently:
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 font-mono text-sm">
+                {[
+                  "JavaScript (ES6+)",
+                  "React",
+                  "TypeScript",
+                  "Next.js",
+                  "Node.js",
+                  "Tailwind CSS",
+                ].map((tech) => (
+                  <motion.div
+                    key={tech}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="text-purple-500">▹</span>
+                    <span className="text-gray-700">{tech}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <motion.div whileHover={{ scale: 1.02 }} className="relative group">
+              <div className="relative z-10 rounded-lg overflow-hidden">
+                <div className="aspect-square">
+                  <img
+                    src="/avatar.png"
+                    alt="Profile photo"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-purple-500 mix-blend-multiply opacity-50 group-hover:opacity-0 transition-opacity duration-300" />
+              </div>
+              <motion.div
+                className="absolute inset-0 border-2 border-purple-400 rounded-lg"
+                animate={{
+                  x: [16, 12, 16],
+                  y: [16, 12, 16],
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Experience Section */}
+        <section id="experience" className="min-h-screen py-24">
+          <NumberedHeading number="02">Where I've Worked</NumberedHeading>
+
+          <div className="space-y-12">
+            {EXPERIENCES.map((exp, index) => (
+              <motion.div
+                key={exp.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ x: 5 }}
+                className="group"
+              >
+                <div className="flex flex-col md:flex-row gap-4 mb-3">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-purple-500 transition-colors">
+                    {exp.title}{" "}
+                    <span className="text-purple-500"> | {exp.company}</span>
+                  </h3>
+                </div>
+
+                <p className="text-sm font-mono text-gray-600 mb-4">
+                  {exp.period}
+                </p>
+
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  {exp.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {exp.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-mono"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Projects Section */}
+        <section id="work" className="min-h-screen py-24">
+          <NumberedHeading number="03">Some Things I've Built</NumberedHeading>
+
+          <div className="space-y-24">
+            {PROJECTS.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className={cn(
+                  "grid md:grid-cols-12 gap-6 items-center",
+                  index % 2 === 1 && "md:grid-flow-dense",
+                )}
+              >
+                <div
+                  className={cn(
+                    "md:col-span-7 relative group",
+                    index % 2 === 1 && "md:col-start-6",
+                  )}
+                >
+                  <div className="relative rounded-lg overflow-hidden shadow-xl">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full aspect-video object-cover"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-br from-purple-500/40 to-rose-500/40 mix-blend-multiply group-hover:opacity-0 transition-opacity duration-300" />
+                  </div>
+                </div>
+
+                <div
+                  className={cn(
+                    "md:col-span-5 space-y-4",
+                    index % 2 === 1
+                      ? "md:col-start-1 md:row-start-1 md:text-left"
+                      : "md:text-right",
+                  )}
+                >
+                  <p className="text-purple-500 font-mono text-sm">
+                    Featured Project
+                  </p>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    {project.title}
+                  </h3>
+
+                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-xl">
+                    <p className="text-gray-700 leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div
+                    className={cn(
+                      "flex flex-wrap gap-2 font-mono text-sm text-gray-600",
+                      index % 2 === 1 ? "md:justify-start" : "md:justify-end",
+                    )}
+                  >
+                    {project.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+
+                  <div
+                    className={cn(
+                      "flex gap-4",
+                      index % 2 === 1 ? "md:justify-start" : "md:justify-end",
+                    )}
+                  >
+                    <motion.a
+                      href={project.github}
+                      whileHover={{ y: -3 }}
+                      className="text-gray-600 hover:text-purple-500 transition-colors"
+                    >
+                      <Github size={22} />
+                    </motion.a>
+                    <motion.a
+                      href={project.external}
+                      whileHover={{ y: -3 }}
+                      className="text-gray-600 hover:text-purple-500 transition-colors"
+                    >
+                      <ExternalLink size={22} />
+                    </motion.a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section
+          id="contact"
+          className="min-h-screen flex items-center justify-center py-24"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl text-center space-y-8"
+          >
+            <p className="text-purple-500 font-mono">04. What's Next?</p>
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900">
+              Get In Touch
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              I'm currently looking for new opportunities. Whether you have a
+              question or just want to say hi, my inbox is always open. I'll try
+              my best to get back to you!
+            </p>
+            <motion.a
+              href="mailto:mhmdfdln14@gmail.com"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 40px rgba(168, 85, 247, 0.2)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-block px-8 py-4 border-2 border-purple-500 text-purple-600 rounded font-mono hover:bg-purple-50 transition-all shadow-lg"
+            >
+              Say Hello
+            </motion.a>
+          </motion.div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-12 text-center">
+          <p className="text-gray-600 text-sm font-mono">
+            Designed & Built by Muhammad Fadlan Hafiz
+          </p>
+        </footer>
+      </main>
+    </div>
   );
 }
