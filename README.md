@@ -1,4 +1,4 @@
-# Alex Morgan - Personal Blog
+# Muhammad Fadlan - Personal Blog
 
 A minimalist, high-performance personal blog built with Next.js 15, Tailwind CSS, and TypeScript.
 
