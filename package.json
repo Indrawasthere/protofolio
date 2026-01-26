@@ -13,12 +13,15 @@
     "framer-motion": "^12.23.26",
     "lucide-react": "^0.344.0",
     "next": "^16.0.10",
+    "pm2": "^6.0.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-snowfall": "^2.4.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^25.0.10",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@vitejs/plugin-react": "^4.2.1",

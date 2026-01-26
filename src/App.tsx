@@ -17,6 +17,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Snowfall } from "react-snowfall";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,9 +61,8 @@ const PROJECTS = [
     title: "Sipakat-PBJ",
     description:
       "Integrated monitoring system for government procurement processes with real-time analytics, audit tracking, and collaborative vendor management.",
-    image:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80",
-    tags: ["React", "TypeScript", "Tailwind", "ApexCharts"],
+    image: "sipakatbanner.jpeg",
+    tags: ["React", "TypeScript", "Tailwind", "PostgreSQL"],
     github: "https://github.com/Indrawasthere/spkmb",
     external: "#",
   },
@@ -71,8 +71,7 @@ const PROJECTS = [
     title: "ProveIT",
     description:
       "Multi-layer approval workflow system with Google Drive integration, real-time notifications, and comprehensive document management.",
-    image:
-      "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=800&q=80",
+    image: "proveitbanner.jpeg",
     tags: ["Next.js", "Prisma", "PostgreSQL", "NextAuth"],
     github: "https://github.com/Indrawasthere/approvalsystem",
     external: "#",
@@ -379,7 +378,7 @@ function Header({
           whileTap={{ scale: 0.95 }}
           className="text-3xl font-black bg-gradient-to-r from-purple-600 to-rose-500 bg-clip-text text-transparent"
         >
-          F.
+          f.dlan
         </motion.button>
 
         {/* Desktop Navigation */}
@@ -543,7 +542,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-rose-50 to-blue-50 text-gray-800 cursor-none md:cursor-auto">
+    <div className="min-h-screen bg-linear-to-br from-purple-50 via-rose-50 to-blue-50 text-gray-800 cursor-none md:cursor-auto">
       <CustomCursor />
       <GradientOrbs />
       <Header activeSection={activeSection} scrollToSection={scrollToSection} />
@@ -874,7 +873,7 @@ export default function App() {
                       className="w-full aspect-video object-cover"
                     />
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-purple-500/40 to-rose-500/40 mix-blend-multiply"
+                      className="absolute inset-0 bg-linear-to-br from-purple-500/40 to-rose-500/40 mix-blend-multiply"
                       whileHover={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     />
@@ -996,7 +995,7 @@ export default function App() {
             whileInView={{ opacity: 1 }}
             className="text-gray-600 text-sm font-mono"
           >
-            Designed & Built by Muhammad Fadlan Hafiz
+            Warm welcome from Jakarta, Indonesia!
           </motion.p>
         </footer>
       </main>
