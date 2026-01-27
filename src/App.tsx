@@ -293,61 +293,6 @@ function AnimatedCounter({
   }, []);
 
   useEffect(() => {
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const target = entry.target as HTMLElement;
-          if (target.id) {
-            setActiveSection(target.id);
-          }
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: null,
-      rootMargin: "-25% 0px -70% 0px",
-      threshold: 0,
-    });
-
-    // Observe sections
-    const sectionIds = ["hero", "about", "experience", "work", "contact"];
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const target = entry.target as HTMLElement;
-          if (target.id) {
-            setActiveSection(target.id);
-          }
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: null,
-      rootMargin: "-25% 0px -70% 0px",
-      threshold: 0,
-    });
-
-    // Observe sections
-    const sectionIds = ["hero", "about", "experience", "work", "contact"];
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-  useEffect(() => {
     if (!isVisible) return;
 
     let startTime: number;
@@ -617,7 +562,6 @@ export default function App() {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<NodeJS.Timeout>();
 
-  // 1. Intersection Observer untuk active section
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -626,22 +570,11 @@ export default function App() {
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      let mostVisibleEntry: IntersectionObserverEntry | null = null;
-
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (
-            !mostVisibleEntry ||
-            entry.intersectionRatio > mostVisibleEntry.intersectionRatio
-          ) {
-            mostVisibleEntry = entry;
-          }
+        if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+          setActiveSection(entry.target.id);
         }
       });
-
-      if (mostVisibleEntry) {
-        setActiveSection(mostVisibleEntry.target.id);
-      }
     };
 
     const observer = new IntersectionObserver(
