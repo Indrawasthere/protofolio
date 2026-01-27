@@ -60,7 +60,7 @@ const EXPERIENCES = [
     id: 4,
     title: "IT Support Intern",
     company: "Ultra Voucher",
-    period: "2022 — 2023",
+    period: "July 2023 — October 2023",
     location: "Jakarta, Indonesia",
     description:
       "Set up office networks and automated voucher sales systems with JavaScript & Python, reducing errors by 40-60%. Provided technical support and collaborated with dev teams on system improvements.",
@@ -146,7 +146,7 @@ function CustomCursor() {
         top: cursorYSpring,
       }}
     >
-      <div className="w-full h-full rounded-full border-2 border-white" />
+      <div className="w-full h-full rounded-full border-2 border-sky-400/60" />
     </motion.div>
   );
 }
@@ -154,8 +154,9 @@ function CustomCursor() {
 function GradientOrbs() {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {/* Aurora orbs */}
       <motion.div
-        className="absolute -top-40 -left-40 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        className="absolute -top-40 -left-40 w-96 h-96 bg-blue-400/10 rounded-full mix-blend-lighten filter blur-3xl"
         animate={{
           x: [0, 100, 0],
           y: [0, -50, 0],
@@ -164,7 +165,7 @@ function GradientOrbs() {
         transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute top-1/4 -right-40 w-96 h-96 bg-rose-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        className="absolute top-1/4 -right-40 w-96 h-96 bg-cyan-300/8 rounded-full mix-blend-lighten filter blur-3xl"
         animate={{
           x: [0, -80, 0],
           y: [0, 80, 0],
@@ -173,7 +174,7 @@ function GradientOrbs() {
         transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute -bottom-40 left-1/3 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40"
+        className="absolute -bottom-40 left-1/3 w-96 h-96 bg-indigo-400/8 rounded-full mix-blend-lighten filter blur-3xl"
         animate={{
           x: [0, 60, 0],
           y: [0, -60, 0],
@@ -182,13 +183,28 @@ function GradientOrbs() {
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-400/6 rounded-full mix-blend-lighten filter blur-3xl"
         animate={{
           x: [0, -70, 0],
           y: [0, 70, 0],
           scale: [1, 1.1, 1],
         }}
         transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Frost gradient overlay - creates depth */}
+      <div className="absolute inset-0 bg-linear-to-b from-slate-900/20 via-transparent to-slate-900/40" />
+
+      {/* Subtle vignette effect */}
+      <div className="absolute inset-0 bg-linear-to-r from-slate-900/30 via-transparent to-slate-900/30" />
+
+      {/* Top glow - northern lights effect */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-96 bg-linear-to-b from-sky-500/5 via-cyan-500/3 to-transparent"
+        animate={{
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   );
@@ -375,9 +391,9 @@ function Header({
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100 }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 supports-backdrop-blur:bg-white/80",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-sm py-4"
+          ? "bg-slate-900/90 backdrop-blur-md border-b border-slate-700/50 py-4"
           : "bg-transparent py-6",
       )}
     >
@@ -409,8 +425,8 @@ function Header({
               className={cn(
                 "text-sm font-medium transition-colors relative px-1 py-2",
                 activeSection === item.id
-                  ? "text-purple-600"
-                  : "text-gray-700 hover:text-purple-600",
+                  ? "text-sky-300"
+                  : "text-slate-300 hover:text-sky-200",
               )}
               aria-current={activeSection === item.id ? "page" : undefined}
             >
@@ -418,7 +434,7 @@ function Header({
               {activeSection === item.id && (
                 <motion.div
                   layoutId="activeSection"
-                  className="absolute bottom-0 left-0 right-0 h-full bg-purple-100 rounded-lg z-0"
+                  className="absolute bottom-0 left-0 right-0 h-full bg-slate-700/60 rounded-lg z-0"
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   aria-hidden="true"
                 />
@@ -434,7 +450,7 @@ function Header({
             onMouseLeave={() => setIsResumeHovered(false)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative px-5 py-2.5 border border-purple-500 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors flex items-center gap-2 overflow-hidden group"
+            className="relative px-5 py-2.5 border border-sky-400/40 text-sky-300 rounded-lg hover:bg-sky-400/10 hover:border-sky-400/60 transition-colors flex items-center gap-2 overflow-hidden group"
             aria-label="Download resume (PDF)"
           >
             <motion.div
@@ -475,7 +491,7 @@ function Header({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-lg"
+            className="md:hidden bg-slate-900/95 backdrop-blur-lg border-t border-slate-700/50 shadow-lg"
           >
             <nav className="px-6 py-6 space-y-3" aria-label="Mobile navigation">
               {NAV_ITEMS.map((item, index) => (
@@ -486,8 +502,8 @@ function Header({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                   className={cn(
-                    "block w-full text-left text-gray-700 hover:text-purple-600 transition-colors px-4 py-3 rounded-lg hover:bg-gray-50",
-                    activeSection === item.id && "bg-purple-50 text-purple-600",
+                    "block w-full text-left text-slate-300 hover:text-sky-200 transition-colors px-4 py-3 rounded-lg hover:bg-slate-800/60",
+                    activeSection === item.id && "bg-slate-800/60 text-sky-300",
                   )}
                   aria-current={activeSection === item.id ? "page" : undefined}
                 >
@@ -535,7 +551,7 @@ function NumberedHeading({
     >
       {number && (
         <motion.span
-          className="text-purple-500 font-mono text-xl"
+          className="text-sky-400 font-mono text-xl"
           initial={{ scale: 0 }}
           whileInView={{ scale: 1 }}
           viewport={{ once: true }}
@@ -544,10 +560,10 @@ function NumberedHeading({
           {number}.
         </motion.span>
       )}
-      <h2 className="text-2xl md:text-4xl font-bold text-gray-900">
+      <h2 className="text-2xl md:text-4xl font-bold text-slate-100">
         {children}
       </h2>
-      <div className="flex-1 h-px bg-linear-to-br from-gray-300 via-gray-200 to-transparent ml-4" />
+      <div className="flex-1 h-px bg-linear-to-r from-slate-600 via-slate-700 to-transparent ml-4" />
     </motion.div>
   );
 }
@@ -644,15 +660,17 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-50 via-rose-50/50 to-blue-50 text-gray-800 cursor-none md:cursor-auto overflow-x-hidden">
+    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 cursor-none md:cursor-auto overflow-x-hidden">
       <CustomCursor />
       <GradientOrbs />
       <Snowfall
-        color="#e9d5ff"
-        snowflakeCount={30}
-        speed={[0.5, 1.5]}
-        wind={[-0.5, 0.5]}
+        color="#e0f2fe"
+        snowflakeCount={125}
+        speed={[0.5, 2.0]}
+        wind={[-0.5, 1.0]}
+        radius={[0.5, 3.0]}
       />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/0 to-slate-900/20" />
       <Header
         activeSection={activeSection}
         scrollToSection={scrollToSection}
@@ -674,14 +692,14 @@ export default function App() {
                 className={cn(
                   "h-0.5 rounded-full transition-all duration-300 relative",
                   activeSection === item.id
-                    ? "bg-linear-to-r from-purple-500 to-rose-500 w-20"
-                    : "bg-gray-400 w-12 group-hover:bg-purple-400 group-hover:w-16",
+                    ? "bg-linear-to-r from-sky-400 to-cyan-400 w-20"
+                    : "bg-slate-600 w-12 group-hover:bg-sky-500/60 group-hover:w-16",
                 )}
               >
                 {activeSection === item.id && (
                   <motion.div
                     layoutId="sideNavDot"
-                    className="absolute -right-1 -top-1 w-3 h-3 rounded-full bg-purple-500"
+                    className="absolute -right-1 -top-1 w-3 h-3 rounded-full bg-sky-400 shadow-lg shadow-sky-400/50"
                     transition={{ type: "spring", stiffness: 300 }}
                   />
                 )}
@@ -690,8 +708,8 @@ export default function App() {
                 className={cn(
                   "text-xs font-medium uppercase tracking-wider transition-all duration-300 whitespace-nowrap",
                   activeSection === item.id
-                    ? "text-purple-600 opacity-100 font-semibold"
-                    : "text-gray-500 opacity-0 group-hover:opacity-100 group-hover:text-gray-700",
+                    ? "text-sky-300 opacity-100 font-semibold"
+                    : "text-slate-400 opacity-0 group-hover:opacity-100 group-hover:text-slate-300",
                 )}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{
@@ -717,19 +735,19 @@ export default function App() {
             icon: <Github size={20} />,
             href: "https://github.com/Indrawasthere",
             label: "GitHub",
-            color: "hover:text-gray-900",
+            color: "hover:text-slate-100",
           },
           {
             icon: <Linkedin size={20} />,
             href: "https://www.linkedin.com/in/muhammadfadlanh/",
             label: "LinkedIn",
-            color: "hover:text-blue-600",
+            color: "hover:text-sky-400",
           },
           {
             icon: <Mail size={20} />,
             href: "mailto:mhmdfdln14@gmail.com",
             label: "Email",
-            color: "hover:text-rose-600",
+            color: "hover:text-cyan-400",
           },
         ].map((social, index) => (
           <motion.div
@@ -748,37 +766,37 @@ export default function App() {
                 transition: { type: "spring", stiffness: 400 },
               }}
               whileTap={{ scale: 0.9 }}
-              className={`text-gray-600 ${social.color} transition-colors relative p-2 group`}
+              className={`text-slate-400 ${social.color} transition-colors relative p-2 group`}
               aria-label={social.label}
             >
               {social.icon}
-              <span className="absolute -left-24 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+              <span className="absolute -left-24 top-1/2 -translate-y-1/2 bg-slate-800 text-slate-100 text-xs px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-slate-700">
                 {social.label}
               </span>
             </motion.a>
           </motion.div>
         ))}
         <motion.div
-          className="w-px h-24 bg-linear-to-b from-gray-400 via-gray-300 to-transparent"
+          className="w-px h-24 bg-linear-to-b from-slate-600 via-slate-700 to-transparent"
           initial={{ scaleY: 0 }}
           animate={{ scaleY: 1 }}
           transition={{ delay: 1.8, duration: 1, ease: "easeOut" }}
         />
       </motion.div>
       <main className="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
-        <motion.section className="min-h-screen flex flex-col justify-center pt-20 bg-linear-to-b from-white/30 to-transparent">
-          <motion.p className="text-purple-500/80 font-mono mb-6 text-sm md:text-base">
+        <motion.section
+          id="hero"
+          className="min-h-screen flex flex-col justify-center pt-20"
+        >
+          <motion.p className="text-sky-400/80 font-mono mb-6 text-sm md:text-base">
             Hi, my name is
           </motion.p>
 
-          <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4
-                                bg-linear-to-r from-gray-800/90 to-gray-700/90 bg-clip-text text-transparent"
-          >
+          <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 text-slate-100">
             Muhammad Fadlan
           </motion.h1>
 
-          <h2 className="text-2xl md:text-2xl lg:text-5xl font-bold mb-8 text-gray-700/80">
+          <h2 className="text-2xl md:text-2xl lg:text-5xl font-bold mb-8 text-slate-300">
             <RotatingTypewriter
               texts={[
                 "A guy who's addicted to code.",
@@ -791,60 +809,76 @@ export default function App() {
             />
           </h2>
 
-          <motion.p className="text-lg text-gray-600/90 max-w-2xl leading-relaxed mb-12">
+          <motion.p className="relative z-10 text-lg text-slate-400 max-w-2xl leading-8 mb-12">
             My finale chapter of life is{" "}
             <motion.code
               whileHover={{
                 scale: 1.02,
-                y: -3,
-                transition: { type: "spring", stiffness: 400 },
+                y: -2,
+                transition: { type: "spring", stiffness: 300 },
               }}
-              className="px-4 py-3 bg-white/30 backdrop-blur-md rounded-xl font-mono
-                         text-sm border border-white/40 shadow-sm
-                         group relative overflow-hidden cursor-pointer transition-all duration-300
-                         hover:bg-white/50 hover:border-purple-200/60 hover:shadow-lg"
+              className="
+                relative inline-flex items-center align-middle
+                translate-y-px
+                px-4 py-2.5 ml-2
+                bg-slate-800/60 backdrop-blur-md
+                rounded-xl font-mono text-sm
+                border border-slate-700/60
+                shadow-sm
+                cursor-pointer
+                overflow-hidden
+                transition-all duration-300
+                hover:bg-slate-800 hover:border-sky-500/40
+                hover:shadow-lg hover:shadow-sky-500/10
+              "
             >
+              {/* Hover gradient */}
               <motion.div
-                className="absolute inset-0 bg-linear-to-r from-purple-100/30 to-rose-100/30"
+                className="absolute inset-0 z-0 bg-linear-to-r from-sky-500/10 to-cyan-500/10"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.25 }}
               />
 
+              {/* Shimmer */}
               <motion.div
-                className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.6 }}
+                className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-sky-400/20 to-transparent"
+                initial={{ x: "-120%" }}
+                whileHover={{ x: "120%" }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
               />
 
+              {/* Border glow */}
               <motion.div
-                className="absolute -inset-0.5 bg-linear-to-r from-purple-400/20 to-rose-400/20 rounded-xl blur-sm"
+                className="absolute inset-0 z-0 rounded-xl ring-1 ring-sky-500/20"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.25 }}
               />
 
-              <span className="relative z-10">
+              {/* Content */}
+              <span className="relative z-10 flex items-center gap-1">
                 <motion.span
-                  className="text-gray-700 group-hover:text-gray-900 transition-colors duration-300"
-                  whileHover={{ color: "#4f46e5" }}
+                  className="mr-1.5 text-slate-400 transition-colors duration-300"
+                  whileHover={{ color: "#7dd3fc" }}
                 >
                   git commit -m
-                </motion.span>{" "}
+                </motion.span>
+
                 <motion.span
-                  className="text-purple-600/80 group-hover:text-purple-700 transition-colors duration-300"
+                  className="text-sky-400 transition-colors duration-300"
                   whileHover={{
-                    color: "#7c3aed",
-                    textShadow: "0 0 8px rgba(124, 58, 237, 0.3)",
+                    color: "#38bdf8",
+                    textShadow: "0 0 6px rgba(56, 189, 248, 0.4)",
                   }}
                 >
                   "mom, i finally did it!"
                 </motion.span>
               </span>
 
+              {/* Cursor blink */}
               <motion.span
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-500/70"
+                className="relative z-10 ml-1 text-sky-500"
                 animate={{ opacity: [1, 0] }}
                 transition={{ duration: 1, repeat: Infinity }}
                 whileHover={{ opacity: 0 }}
@@ -862,11 +896,11 @@ export default function App() {
               scale: 1.05,
               y: -5,
               rotateX: 5,
-              boxShadow: "0 20px 50px rgba(168, 85, 247, 0.4)",
+              boxShadow: "0 20px 50px rgba(56, 189, 248, 0.3)",
             }}
             whileTap={{ scale: 0.98 }}
             onClick={() => scrollToSection("work")}
-            className="group px-8 py-4 bg-white border-2 border-purple-500 text-purple-600 rounded-xl font-mono hover:bg-purple-50 transition-all w-fit shadow-2xl relative overflow-hidden transform-gpu"
+            className="group px-8 py-4 bg-slate-800/80 border-2 border-sky-500/40 text-sky-300 rounded-xl font-mono hover:bg-slate-800 hover:border-sky-400/60 transition-all w-fit shadow-2xl relative overflow-hidden transform-gpu"
             style={{
               transformStyle: "preserve-3d",
               perspective: "1000px",
@@ -877,20 +911,22 @@ export default function App() {
               <motion.div
                 animate={{ x: [0, 5, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-purple-500"
+                className="text-sky-400"
               >
                 →
               </motion.div>
             </div>
 
+            {/* Shimmer */}
             <motion.div
-              className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
+              className="absolute inset-0 bg-linear-to-r from-transparent via-sky-400/20 to-transparent"
               initial={{ x: "-100%" }}
               whileHover={{ x: "100%" }}
               transition={{ duration: 0.8 }}
             />
 
-            <div className="absolute inset-0 bg-linear-to-b from-white/50 to-transparent rounded-xl" />
+            {/* 3D depth */}
+            <div className="absolute inset-0 bg-linear-to-b from-slate-700/30 to-transparent rounded-xl" />
           </motion.button>
         </motion.section>
 
@@ -902,7 +938,7 @@ export default function App() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
-              className="md:col-span-2 space-y-6 text-gray-700 leading-relaxed"
+              className="md:col-span-2 space-y-6 text-slate-300 leading-relaxed"
             >
               <p>
                 Hello! I'm Fadlan, a software engineer based in Jakarta,
@@ -931,7 +967,7 @@ export default function App() {
                 bridge software, hardware, and impact.
               </p>
 
-              <p className="text-gray-600 font-medium">
+              <p className="text-slate-400 font-medium">
                 Here are a few technologies I've been working with recently:
               </p>
 
@@ -977,11 +1013,11 @@ export default function App() {
                         ease: "linear",
                         delay: Math.random() * 2,
                       }}
-                      className="text-purple-500 text-lg"
+                      className="text-sky-400 text-lg"
                     >
                       ▸
                     </motion.div>
-                    <span className="text-gray-700 group-hover:text-purple-600 transition-colors font-mono text-sm">
+                    <span className="text-slate-300 group-hover:text-sky-300 transition-colors font-mono text-sm">
                       {tech}
                     </span>
                   </motion.div>
@@ -1005,9 +1041,11 @@ export default function App() {
               }}
               className="relative group"
             >
-              <div className="absolute -inset-4 bg-linear-to-r from-purple-400 to-pink-400 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+              {/* Glow */}
+              <div className="absolute -inset-4 bg-linear-to-r from-sky-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
 
-              <div className="relative z-10 rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl">
+              {/* Border */}
+              <div className="relative z-10 rounded-xl overflow-hidden border-2 border-slate-700/60 shadow-2xl">
                 <div className="aspect-square">
                   <img
                     src="/avatar.png"
@@ -1019,15 +1057,17 @@ export default function App() {
                   />
                 </div>
 
+                {/* Overlay */}
                 <motion.div
-                  className="absolute inset-0 bg-linear-to-t from-purple-600/20 via-transparent to-transparent"
+                  className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent"
                   whileHover={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
 
+              {/* Floating border */}
               <motion.div
-                className="absolute inset-0 border-2 border-purple-400/50 rounded-xl"
+                className="absolute inset-0 border-2 border-sky-500/30 rounded-xl"
                 animate={{
                   x: [0, 8, 0],
                   y: [0, 8, 0],
@@ -1051,9 +1091,9 @@ export default function App() {
               <FloatingCard key={exp.id} delay={index * 0.1}>
                 <motion.article //
                   whileHover={{ x: 8, scale: 1.02 }}
-                  className="group p-6 rounded-xl bg-white/70 backdrop-blur-sm
-                             shadow-lg hover:shadow-2xl transition-all
-                             border border-white/30"
+                  className="group p-6 rounded-xl bg-slate-800/60 backdrop-blur-sm
+                             shadow-lg hover:shadow-2xl hover:shadow-sky-500/10 transition-all
+                             border border-slate-700/60 hover:border-sky-500/30"
                 >
                   <header
                     className="flex flex-col md:flex-row md:items-center
@@ -1061,29 +1101,27 @@ export default function App() {
                   >
                     <div>
                       <h3
-                        className="text-xl font-bold text-gray-900
-                                   group-hover:text-purple-600 transition-colors"
+                        className="text-xl font-bold text-slate-100
+                                   group-hover:text-sky-300 transition-colors"
                       >
                         {exp.title}{" "}
-                        <span className="text-purple-600">
-                          - {exp.company}
-                        </span>{" "}
+                        <span className="text-sky-400">- {exp.company}</span>
                       </h3>
                     </div>
 
                     <p
-                      className="text-sm font-mono text-gray-600 bg-gray-100
-                                px-3 py-1 rounded-full inline-block w-fit"
+                      className="text-sm font-mono text-slate-400 bg-slate-900/60
+                                px-3 py-1 rounded-full inline-block w-fit border border-slate-700/40"
                     >
                       {exp.period}
                     </p>
                   </header>
 
-                  <p className="text-gray-700 leading-relaxed mb-5">
+                  <p className="text-slate-300 leading-relaxed mb-5">
                     {exp.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 font-mono text-sm text-slate-400">
                     {exp.skills.map((skill, i) => (
                       <motion.span
                         key={skill}
@@ -1097,12 +1135,13 @@ export default function App() {
                         }}
                         whileHover={{
                           scale: 1.1,
-                          backgroundColor: "#7c3aed",
-                          color: "white",
+                          backgroundColor: "#0c4a6e",
+                          borderColor: "#38bdf8",
+                          color: "#e0f2fe",
                         }}
-                        className="px-3 py-1 bg-purple-100 text-purple-700
+                        className="px-3 py-1 bg-slate-900/60 text-slate-300 border border-slate-700/40
                                  rounded-full text-sm font-medium cursor-pointer
-                                 transition-colors"
+                                 transition-all"
                       >
                         {skill}
                       </motion.span>
@@ -1162,26 +1201,26 @@ export default function App() {
                   <motion.p
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
-                    className="text-purple-500 font-mono text-sm"
+                    className="text-sky-400 font-mono text-sm"
                   >
                     Featured Project
                   </motion.p>
-                  <h3 className="text-2xl font-bold text-gray-900">
+                  <h3 className="text-2xl font-bold text-slate-100">
                     {project.title}
                   </h3>
 
                   <motion.div
                     whileHover={{ scale: 1.02, y: -5 }}
-                    className="bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-xl"
+                    className="bg-slate-800/80 backdrop-blur-sm rounded-lg p-6 shadow-xl border border-slate-700/60"
                   >
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-slate-300 leading-relaxed">
                       {project.description}
                     </p>
                   </motion.div>
 
                   <div
                     className={cn(
-                      "flex flex-wrap gap-2 font-mono text-sm text-gray-600",
+                      "flex flex-wrap gap-2 font-mono text-sm text-slate-400",
                       index % 2 === 1 ? "md:justify-start" : "md:justify-end",
                     )}
                   >
@@ -1200,7 +1239,7 @@ export default function App() {
                       href={project.github}
                       whileHover={{ y: -3, scale: 1.2, rotate: 5 }}
                       whileTap={{ scale: 0.9 }}
-                      className="text-gray-600 hover:text-purple-500 transition-colors"
+                      className="text-slate-400 hover:text-sky-400 transition-colors"
                     >
                       <Github size={22} />
                     </motion.a>
@@ -1208,7 +1247,7 @@ export default function App() {
                       href={project.external}
                       whileHover={{ y: -3, scale: 1.2, rotate: -5 }}
                       whileTap={{ scale: 0.9 }}
-                      className="text-gray-600 hover:text-purple-500 transition-colors"
+                      className="text-zinc-500 hover:text-sky-100 transition-colors"
                     >
                       <ExternalLink size={22} />
                     </motion.a>
@@ -1235,7 +1274,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-purple-500 font-mono text-sm md:text-base tracking-wider"
+              className="text-sky-400 font-mono text-sm md:text-base tracking-wider"
             >
               What's Next?
             </motion.p>
@@ -1245,7 +1284,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900"
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-slate-100"
             >
               Let's get in touch
             </motion.h2>
@@ -1255,7 +1294,7 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-xl mx-auto"
+              className="text-lg md:text-xl text-slate-300 leading-relaxed max-w-xl mx-auto"
             >
               I'm currently exploring new opportunities in software development
               and related fields. Whether you have an exciting project, a job
@@ -1274,15 +1313,15 @@ export default function App() {
                 href="mailto:mhmdfdln14@gmail.com"
                 whileHover={{
                   scale: 1.05,
-                  boxShadow: "0 20px 50px rgba(168, 85, 247, 0.4)",
-                  backgroundColor: "#7c3aed",
-                  color: "white",
-                  borderColor: "#7c3aed",
+                  boxShadow: "0 20px 50px rgba(56, 189, 248, 0.3)",
+                  backgroundColor: "#0c4a6e",
+                  color: "#e0f2fe",
+                  borderColor: "#38bdf8",
                 }}
                 whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 border-2 border-purple-500
-                           text-purple-600 rounded-lg font-mono text-lg font-semibold
-                           hover:bg-purple-500 hover:text-white transition-all duration-300
+                className="inline-flex items-center gap-3 px-8 py-4 border-2 border-sky-500/40
+                           text-sky-300 rounded-lg font-mono text-lg font-semibold
+                           hover:bg-sky-900 hover:text-sky-50 transition-all duration-300
                            shadow-xl hover:shadow-2xl group"
               >
                 <span>👋</span>
@@ -1324,9 +1363,9 @@ export default function App() {
                   rel="noopener noreferrer"
                   whileHover={{ y: -5, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-3 rounded-full bg-gray-100 hover:bg-purple-100
-                             text-gray-700 hover:text-purple-600 transition-all
-                             border border-gray-200 hover:border-purple-300
+                  className="p-3 rounded-full bg-slate-800/60 hover:bg-slate-700
+                             text-slate-400 hover:text-sky-300 transition-all
+                             border border-slate-700/60 hover:border-sky-500/40
                              text-xl shadow-sm hover:shadow-md"
                   aria-label={`Visit my ${social.name}`}
                 >
@@ -1337,7 +1376,7 @@ export default function App() {
           </motion.div>
         </section>
 
-        <footer className="py-16 text-center border-t border-gray-200">
+        <footer className="py-16 text-center border-t border-slate-800">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -1345,19 +1384,19 @@ export default function App() {
             className="space-y-6"
           >
             <motion.p
-              className="text-gray-600 text-sm font-mono"
+              className="text-slate-400 text-sm font-mono"
               animate={{ opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
               <span className="inline-block animate-pulse">
-                Warm welcome from Jakarta, Indonesia!
+                Cold welcome from Jakarta, Indonesia!
               </span>
             </motion.p>
 
-            <p className="text-gray-500 text-xs font-mono max-w-md mx-auto px-4">
+            <p className="text-slate-500 text-xs font-mono max-w-md mx-auto px-4">
               Powered by coffee, debugged with tears.
               <br />
-              <code className="text-gray-400">
+              <code className="text-slate-600">
                 Last updated:{" "}
                 {new Date().toLocaleDateString("en-US", {
                   month: "long",
