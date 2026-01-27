@@ -358,7 +358,7 @@ function Header({
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 30); // threshold lebih kecil
+      setScrolled(window.scrollY > 30);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -393,7 +393,6 @@ function Header({
           <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-br from-purple-600 to-rose-500 group-hover:w-full transition-all duration-300" />
         </motion.button>
 
-        {/* Desktop Navigation */}
         <nav
           className="hidden md:flex items-center gap-8"
           aria-label="Main navigation"
@@ -454,12 +453,10 @@ function Header({
               ↓
             </motion.span>
 
-            {/* Hover Effect */}
             <span className="absolute inset-0 bg-linear-to-br from-purple-500/0 via-purple-500/5 to-purple-500/0 translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </motion.a>
         </nav>
 
-        {/* Mobile Menu Button */}
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.9 }}
@@ -471,7 +468,6 @@ function Header({
         </motion.button>
       </div>
 
-      {/* Mobile Navigation */}
       <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
@@ -591,7 +587,6 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
-  // 2. Scroll detection untuk isScrolling state
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolling(true);
@@ -664,7 +659,6 @@ export default function App() {
         isScrolling={isScrolling}
       />
 
-      {/* Side Navigation with Labels - Enhanced */}
       <nav className="hidden xl:flex fixed left-8 2xl:left-12 top-0 bottom-0 items-center z-40">
         <div className="space-y-8">
           {NAV_ITEMS.map((item) => (
@@ -684,7 +678,6 @@ export default function App() {
                     : "bg-gray-400 w-12 group-hover:bg-purple-400 group-hover:w-16",
                 )}
               >
-                {/* Active indicator dot */}
                 {activeSection === item.id && (
                   <motion.div
                     layoutId="sideNavDot"
@@ -713,7 +706,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* Social Links - Enhanced */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -760,7 +752,6 @@ export default function App() {
               aria-label={social.label}
             >
               {social.icon}
-              {/* Tooltip on hover */}
               <span className="absolute -left-24 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                 {social.label}
               </span>
@@ -774,10 +765,7 @@ export default function App() {
           transition={{ delay: 1.8, duration: 1, ease: "easeOut" }}
         />
       </motion.div>
-
-      {/* Main Content */}
       <main className="relative z-10 max-w-5xl mx-auto px-6 md:px-12">
-        {/* Hero Section */}
         <motion.section className="min-h-screen flex flex-col justify-center pt-20 bg-linear-to-b from-white/30 to-transparent">
           <motion.p className="text-purple-500/80 font-mono mb-6 text-sm md:text-base">
             Hi, my name is
@@ -816,7 +804,6 @@ export default function App() {
                          group relative overflow-hidden cursor-pointer transition-all duration-300
                          hover:bg-white/50 hover:border-purple-200/60 hover:shadow-lg"
             >
-              {/* Hover gradient overlay */}
               <motion.div
                 className="absolute inset-0 bg-linear-to-r from-purple-100/30 to-rose-100/30"
                 initial={{ opacity: 0 }}
@@ -824,7 +811,6 @@ export default function App() {
                 transition={{ duration: 0.3 }}
               />
 
-              {/* Shimmer effect on hover */}
               <motion.div
                 className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent"
                 initial={{ x: "-100%" }}
@@ -832,7 +818,6 @@ export default function App() {
                 transition={{ duration: 0.6 }}
               />
 
-              {/* Animated border glow */}
               <motion.div
                 className="absolute -inset-0.5 bg-linear-to-r from-purple-400/20 to-rose-400/20 rounded-xl blur-sm"
                 initial={{ opacity: 0 }}
@@ -843,14 +828,14 @@ export default function App() {
               <span className="relative z-10">
                 <motion.span
                   className="text-gray-700 group-hover:text-gray-900 transition-colors duration-300"
-                  whileHover={{ color: "#4f46e5" }} // indigo-600
+                  whileHover={{ color: "#4f46e5" }}
                 >
                   git commit -m
                 </motion.span>{" "}
                 <motion.span
                   className="text-purple-600/80 group-hover:text-purple-700 transition-colors duration-300"
                   whileHover={{
-                    color: "#7c3aed", // purple-600
+                    color: "#7c3aed",
                     textShadow: "0 0 8px rgba(124, 58, 237, 0.3)",
                   }}
                 >
@@ -858,7 +843,6 @@ export default function App() {
                 </motion.span>
               </span>
 
-              {/* Terminal cursor blink */}
               <motion.span
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-500/70"
                 animate={{ opacity: [1, 0] }}
@@ -899,7 +883,6 @@ export default function App() {
               </motion.div>
             </div>
 
-            {/* Shimmer effect */}
             <motion.div
               className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
               initial={{ x: "-100%" }}
@@ -907,16 +890,13 @@ export default function App() {
               transition={{ duration: 0.8 }}
             />
 
-            {/* 3D depth effect */}
             <div className="absolute inset-0 bg-linear-to-b from-white/50 to-transparent rounded-xl" />
           </motion.button>
         </motion.section>
 
-        {/* About Section */}
         <section id="about" className="min-h-screen py-24 scroll-mt-24">
           <NumberedHeading number="">About Me</NumberedHeading>{" "}
           <div className="grid md:grid-cols-3 gap-12 items-start">
-            {/* TEXT CONTENT */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -955,7 +935,6 @@ export default function App() {
                 Here are a few technologies I've been working with recently:
               </p>
 
-              {/* TECH STACK - Improved */}
               <motion.div
                 className="grid grid-cols-2 gap-4"
                 initial="hidden"
@@ -1010,7 +989,6 @@ export default function App() {
               </motion.div>
             </motion.div>
 
-            {/* PROFILE IMAGE - Optimized */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -1027,10 +1005,8 @@ export default function App() {
               }}
               className="relative group"
             >
-              {/* Glow Effect */}
               <div className="absolute -inset-4 bg-linear-to-r from-purple-400 to-pink-400 rounded-2xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
 
-              {/* Image Container */}
               <div className="relative z-10 rounded-xl overflow-hidden border-2 border-white/20 shadow-2xl">
                 <div className="aspect-square">
                   <img
@@ -1043,7 +1019,6 @@ export default function App() {
                   />
                 </div>
 
-                {/* Overlay Effect */}
                 <motion.div
                   className="absolute inset-0 bg-linear-to-t from-purple-600/20 via-transparent to-transparent"
                   whileHover={{ opacity: 0 }}
@@ -1051,7 +1026,6 @@ export default function App() {
                 />
               </div>
 
-              {/* Floating Border */}
               <motion.div
                 className="absolute inset-0 border-2 border-purple-400/50 rounded-xl"
                 animate={{
@@ -1068,13 +1042,11 @@ export default function App() {
           </div>
         </section>
 
-        {/* Experience Section */}
         <section id="experience" className="min-h-screen py-24 scroll-mt-24">
-          <NumberedHeading number="02">Where I've Worked</NumberedHeading>
+          <NumberedHeading number="">Where I've Worked</NumberedHeading>
 
           <div className="space-y-8 md:space-y-12">
             {" "}
-            {/* Responsive spacing */}
             {EXPERIENCES.map((exp, index) => (
               <FloatingCard key={exp.id} delay={index * 0.1}>
                 <motion.article //
@@ -1083,7 +1055,6 @@ export default function App() {
                              shadow-lg hover:shadow-2xl transition-all
                              border border-white/30"
                 >
-                  {/* HEADER */}
                   <header
                     className="flex flex-col md:flex-row md:items-center
                                    justify-between gap-3 mb-4"
@@ -1108,12 +1079,10 @@ export default function App() {
                     </p>
                   </header>
 
-                  {/* DESCRIPTION */}
                   <p className="text-gray-700 leading-relaxed mb-5">
                     {exp.description}
                   </p>
 
-                  {/* SKILLS/TAGS */}
                   <div className="flex flex-wrap gap-2">
                     {exp.skills.map((skill, i) => (
                       <motion.span
@@ -1145,9 +1114,8 @@ export default function App() {
           </div>
         </section>
 
-        {/* Projects Section */}
         <section id="work" className="min-h-screen py-24">
-          <NumberedHeading number="03">Some Things I've Built</NumberedHeading>
+          <NumberedHeading number="">Some Things I've Built</NumberedHeading>
 
           <div className="space-y-24">
             {PROJECTS.map((project, index) => (
@@ -1251,7 +1219,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Contact Section */}
         <section
           id="contact"
           className="min-h-screen flex items-center justify-center py-24 scroll-mt-24"
@@ -1263,7 +1230,6 @@ export default function App() {
             transition={{ duration: 0.7 }}
             className="max-w-2xl mx-auto text-center space-y-8 px-6"
           >
-            {/* Subheading */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1271,10 +1237,9 @@ export default function App() {
               transition={{ delay: 0.2 }}
               className="text-purple-500 font-mono text-sm md:text-base tracking-wider"
             >
-              04. What's Next?
+              What's Next?
             </motion.p>
 
-            {/* Title */}
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1285,7 +1250,6 @@ export default function App() {
               Let's get in touch
             </motion.h2>
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1299,7 +1263,6 @@ export default function App() {
               open. I'll do my best to get back to you!
             </motion.p>
 
-            {/* CTA Button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1335,7 +1298,6 @@ export default function App() {
               </motion.a>
             </motion.div>
 
-            {/* Optional Social Links */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -1375,7 +1337,6 @@ export default function App() {
           </motion.div>
         </section>
 
-        {/* Footer */}
         <footer className="py-16 text-center border-t border-gray-200">
           <motion.div
             initial={{ opacity: 0 }}
