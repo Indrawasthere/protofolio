@@ -20,7 +20,6 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Snowfall } from "react-snowfall";
 
-
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -241,14 +240,6 @@ function GradientOrbs() {
       />
       {/* Frost gradient overlay - creates depth */}
       <div className="absolute inset-0 bg-linear-to-b from-slate-900/20 via-transparent to-slate-900/40" />
-      {/* Moonlight glow - follows scroll */}
-      <motion.div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-300/5 rounded-full filter blur-3xl pointer-events-none"
-        style={{
-          y: scrollY * 0.5,
-          willChange: "transform",
-        }}
-      />{" "}
       {/* Top glow - northern lights effect */}
       <motion.div
         className="absolute top-0 left-0 right-0 h-96 bg-linear-to-b from-sky-500/5 via-cyan-500/3 to-transparent"
@@ -321,7 +312,7 @@ function RotatingTypewriter({
         <motion.span
           animate={{ opacity: [1, 0] }}
           transition={{ duration: 0.8, repeat: Infinity }}
-          className="text-state-500"
+          className="text-sky-500"
         >
           |
         </motion.span>
@@ -569,12 +560,16 @@ function Header({
               <motion.a
                 href="/resume.pdf"
                 target="_blank"
-                whileHover={{ scale: 1.1, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-4 bg-slate-800 text-sky-300 rounded-full shadow-2xl border border-sky-500/40 hover:bg-slate-700 transition-all"
-                aria-label="Download CV"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: NAV_ITEMS.length * 0.05 }}
+                className="block w-full text-center px-4 py-3 border-2 border-sky-500/40 text-sky-300 rounded-lg hover:bg-sky-400/10 transition-colors font-medium mt-4"
               >
-                <FileText size={20} />
+                <div className="flex items-center justify-center gap-2">
+                  <FileText size={18} />
+                  Download Resume
+                </div>
               </motion.a>
             </nav>
           </motion.div>
@@ -622,7 +617,7 @@ function NumberedHeading({
               style={{ left: `${20 * i}%` }}
               animate={{
                 height: ["4px", "8px", "4px"],
-                opacity: [0.4, 0.7, 0.4],
+                opacity: [0.6, 1, 0.6],
               }}
               transition={{
                 duration: 2 + i * 0.5,
@@ -720,9 +715,9 @@ function ParallaxSection({
 function ProjectLightbox({
   project,
   isOpen,
-  onClose
+  onClose,
 }: {
-  project: typeof PROJECTS[0];
+  project: (typeof PROJECTS)[0];
   isOpen: boolean;
   onClose: () => void;
 }) {
@@ -735,19 +730,19 @@ function ProjectLightbox({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4 cursor-pointer"
+        className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm cursor-pointer"
       >
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative max-w-5xl w-full bg-slate-800 rounded-2xl overflow-hidden shadow-2xl cursor-default border border-slate-700"
+          className="relative w-full max-w-5xl bg-slate-800 rounded-2xl overflow-hidden shadow-2xl border border-slate-700 cursor-default"
         >
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-slate-900/80 hover:bg-slate-900 rounded-full text-slate-300 hover:text-white transition-colors"
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-900/80 hover:bg-slate-900 text-slate-300 hover:text-white transition-colors"
           >
             <X size={24} />
           </button>
@@ -761,40 +756,49 @@ function ProjectLightbox({
 
           {/* Content */}
           <div className="p-8">
-            <h3 className="text-3xl font-bold text-slate-100 mb-4">
+            <h3 className="mb-4 text-3xl font-bold text-slate-100">
               {project.title}
             </h3>
-            <p className="text-slate-300 leading-relaxed mb-6">
+
+            <p className="mb-6 text-slate-300 leading-relaxed">
               {project.description}
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-6">
-              {project.tags.map(tag => (
-                <span key={tag} className="px-3 py-1 bg-slate-900/60 text-slate-300 rounded-full text-sm border border-slate-700/40">
+            <div className="mb-6 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 text-sm rounded-full bg-slate-900/60 text-slate-300 border border-slate-700/40"
+                >
                   {tag}
                 </span>
               ))}
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-900 hover:bg-slate-700 text-slate-100 transition-colors border border-slate-700"
+                >
+                  <Github size={20} />
+                  View Code
+                </a>
+              )}
 
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-700 text-slate-100 rounded-lg transition-colors border border-slate-700"
-              >
-                <Github size={20} />
-                View Code
-              </a>
-
-                href={project.external}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors"
-              >
-                <ExternalLink size={20} />
-                Live Demo
-              </a>
+              {project.external && (
+                <a
+                  href={project.external}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-600 text-white transition-colors"
+                >
+                  <ExternalLink size={20} />
+                  Live Demo
+                </a>
+              )}
             </div>
           </div>
         </motion.div>
@@ -809,6 +813,9 @@ export default function App() {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<NodeJS.Timeout>();
   const [scrollY, setScrollY] = useState(0);
+  const [selectedProject, setSelectedProject] = useState<
+    (typeof PROJECTS)[0] | null
+  >(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -904,23 +911,35 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 cursor-none md:cursor-auto overflow-x-hidden">
+    <div className="min-h-screen bg-slate-900 text-slate-100 cursor-none md:cursor-auto overflow-x-hidden">
       <CustomCursor />
       <GradientOrbs />
       <TwinklingStars />
+
+      {/* Moonlight glow - follows scroll */}
+      <motion.div
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-300/5 rounded-full filter blur-3xl pointer-events-none"
+        style={{
+          y: scrollY * 0.5,
+          willChange: "transform",
+        }}
+      />
+
+      {/* Frost texture overlay */}
       <div
-        className="fixed inset-0 pointer-events-none opacity-[0.015] mix-blend-overlay"
+        className="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           backgroundSize: "30px 30px",
         }}
       />
-      // Line ~715, replace single Snowfall dengan:
+
+      {/* Multi-layer snowfall */}
       <>
         {/* Background layer - slow */}
         <Snowfall
           color="#e0f2fe"
-          snowflakeCount={20}
+          snowflakeCount={60}
           speed={[0.3, 0.8]}
           wind={[-0.2, 0.3]}
           radius={[1.0, 2.0]}
@@ -930,7 +949,7 @@ export default function App() {
         {/* Mid layer - medium */}
         <Snowfall
           color="#e0f2fe"
-          snowflakeCount={25}
+          snowflakeCount={55}
           speed={[0.8, 1.5]}
           wind={[-0.5, 0.8]}
           radius={[1.5, 3.0]}
@@ -940,13 +959,14 @@ export default function App() {
         {/* Foreground layer - fast */}
         <Snowfall
           color="#e0f2fe"
-          snowflakeCount={15}
+          snowflakeCount={50}
           speed={[1.5, 2.5]}
           wind={[-1.0, 1.5]}
           radius={[2.0, 4.0]}
           style={{ opacity: 0.7, zIndex: 3 }}
         />
       </>
+
       <Header
         activeSection={activeSection}
         scrollToSection={scrollToSection}
@@ -1149,7 +1169,7 @@ export default function App() {
                 </motion.span>
 
                 <motion.span
-                  className="mr-1.5 text-sky-400 transition-colors duration-300 text-xs md:text-sm warp-break-words"
+                  className="text-sky-400 transition-colors duration-300 text-xs md:text-sm warp-break-words"
                   style={{ maxWidth: "calc(100vw - 200px)" }}
                   whileHover={{
                     color: "#38bdf8",
@@ -1233,7 +1253,7 @@ export default function App() {
                 My tech journey started in 2016 when I discovered programming
                 through Java phones and internet cafes. That curiosity led me to
                 web development, and by 9th grade I was already building my
-                school’s enrollment website and helping set up exam servers — my
+                school's enrollment website and helping set up exam servers — my
                 first real taste of IT responsibility.
               </p>
 
@@ -1378,7 +1398,7 @@ export default function App() {
           <div className="relative">
             {/* Timeline line */}
             <motion.div
-              className="absolute left-0 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sky-500 via-sky-400 to-transparent"
+              className="absolute left-0 md:left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-sky-500 via-sky-400 to-transparent"
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               viewport={{ once: true }}
@@ -1392,7 +1412,7 @@ export default function App() {
                   <div className="relative">
                     {/* Timeline dot */}
                     <motion.div
-                      className="absolute -left-[34px] md:-left-[52px] top-6 w-4 h-4 rounded-full bg-sky-400 border-4 border-slate-900 shadow-lg shadow-sky-400/50"
+                      className="absolute -left8.5 md:-left-13 top-6 w-4 h-4 rounded-full bg-sky-400 border-4 border-slate-900 shadow-lg shadow-sky-400/50"
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
@@ -1408,7 +1428,7 @@ export default function App() {
                     >
                       {/* Frost sweep on hover */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-br from-sky-400/5 via-transparent to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        className="absolute inset-0 bg-linear-to-br from-sky-400/10 via-transparent to-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                         initial={{ x: "-100%", y: "-100%" }}
                         whileHover={{ x: 0, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -1487,6 +1507,8 @@ export default function App() {
                     index % 2 === 1 && "md:col-start-6",
                   )}
                   whileHover={{ scale: 1.02 }}
+                  onClick={() => setSelectedProject(project)}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className="relative rounded-lg overflow-hidden shadow-xl">
                     <img
@@ -1497,7 +1519,7 @@ export default function App() {
                       decoding="async"
                     />
                     <motion.div
-                      className="absolute inset-0 bg-linear-to-br from-sky-700/60 to-sky-400 mix-blend-multiply"
+                      className="absolute inset-0 bg-linear-to-br from-slate-900/40 to-sky-500/20 mix-blend-multiply"
                       whileHover={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     />
@@ -1617,26 +1639,6 @@ export default function App() {
             </motion.p>
 
             <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{
-                y: scrollY > 500 ? 0 : 100,
-                opacity: scrollY > 500 ? 1 : 0,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed bottom-8 right-8 z-50 flex gap-3"
-            >
-              <motion.a
-                href="mailto:mhmdfdln14@gmail.com"
-                whileHover={{ scale: 1.1, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-4 bg-sky-500 text-white rounded-full shadow-2xl hover:shadow-sky-500/50 transition-all"
-                aria-label="Send email"
-              >
-                <Mail size={20} />
-              </motion.a>
-            </motion.div>
-
-            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -1705,7 +1707,49 @@ export default function App() {
             </p>
           </motion.div>
         </footer>
+
+        {/* Project Lightbox */}
+        {selectedProject && (
+          <ProjectLightbox
+            project={selectedProject}
+            isOpen={!!selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
+        )}
       </main>
+
+      {/* Floating CTA - Sticky buttons */}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{
+          y: scrollY > 500 ? 0 : 100,
+          opacity: scrollY > 500 ? 1 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="fixed bottom-8 right-8 z-50 flex gap-3"
+      >
+        <motion.a
+          href="mailto:mhmdfdln14@gmail.com"
+          whileHover={{ scale: 1.1, y: -5 }}
+          whileTap={{ scale: 0.95 }}
+          className="p-4 bg-sky-500 text-white rounded-full shadow-2xl hover:shadow-sky-500/50 transition-all"
+          aria-label="Send email"
+        >
+          <Mail size={20} />
+        </motion.a>
+
+        <motion.a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.1, y: -5 }}
+          whileTap={{ scale: 0.95 }}
+          className="p-4 bg-slate-800 text-sky-300 rounded-full shadow-2xl border border-sky-500/40 hover:bg-slate-700 transition-all"
+          aria-label="Download CV"
+        >
+          <FileText size={20} />
+        </motion.a>
+      </motion.div>
     </div>
   );
 }
