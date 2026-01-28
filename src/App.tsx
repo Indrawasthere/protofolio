@@ -13,11 +13,13 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useScroll,
 } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Snowfall } from "react-snowfall";
+
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -123,32 +125,80 @@ const NAV_ITEMS = [
 function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
+  const [trails, setTrails] = useState<
+    Array<{ x: number; y: number; id: number }>
+  >([]);
 
   const springConfig = { damping: 25, stiffness: 700 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    let trailId = 0;
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX - 16);
       cursorY.set(e.clientY - 16);
+
+      // Add snowflake trail
+      if (Math.random() > 0.7) {
+        // 30% chance
+        const newTrail = { x: e.clientX, y: e.clientY, id: trailId++ };
+        setTrails((prev) => [...prev.slice(-5), newTrail]); // Keep last 5
+      }
     };
 
     window.addEventListener("mousemove", moveCursor);
     return () => window.removeEventListener("mousemove", moveCursor);
   }, []);
 
+  // Remove old trails
+  useEffect(() => {
+    if (trails.length > 0) {
+      const timer = setTimeout(() => {
+        setTrails((prev) => prev.slice(1));
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [trails]);
+
   return (
-    <motion.div
-      className="fixed w-8 h-8 pointer-events-none z-50 mix-blend-difference hidden md:block"
-      style={{
-        left: cursorXSpring,
-        top: cursorYSpring,
-        willChange: "transform",
-      }}
-    >
-      <div className="w-full h-full rounded-full border-2 border-sky-400/60" />
-    </motion.div>
+    <>
+      {/* Main cursor */}
+      <motion.div
+        className="fixed w-8 h-8 pointer-events-none z-50 mix-blend-difference hidden md:block"
+        style={{
+          left: cursorXSpring,
+          top: cursorYSpring,
+          willChange: "transform",
+        }}
+      >
+        <div className="w-full h-full rounded-full border-2 border-sky-400/60" />
+      </motion.div>
+
+      {/* Snowflake trails */}
+      {trails.map((trail) => (
+        <motion.div
+          key={trail.id}
+          className="fixed pointer-events-none z-50 hidden md:block"
+          initial={{
+            x: trail.x,
+            y: trail.y,
+            opacity: 0.6,
+            scale: 1,
+          }}
+          animate={{
+            y: trail.y + 20,
+            opacity: 0,
+            scale: 0.5,
+            rotate: 360,
+          }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          style={{ fontSize: "12px" }}
+        >
+          ❄️
+        </motion.div>
+      ))}
+    </>
   );
 }
 
@@ -515,19 +565,16 @@ function Header({
                   </div>
                 </motion.button>
               ))}
+
               <motion.a
                 href="/resume.pdf"
                 target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: NAV_ITEMS.length * 0.05 }}
-                className="block w-full text-center px-4 py-3 border-2 border-sky-500 text-sky-600 rounded-lg hover:bg-sky-50 transition-colors font-medium mt-4"
+                whileHover={{ scale: 1.1, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-4 bg-slate-800 text-sky-300 rounded-full shadow-2xl border border-sky-500/40 hover:bg-slate-700 transition-all"
+                aria-label="Download CV"
               >
-                <div className="flex items-center justify-center gap-2">
-                  <FileText size={18} />
-                  Download Resume
-                </div>
+                <FileText size={20} />
               </motion.a>
             </nav>
           </motion.div>
@@ -646,6 +693,116 @@ function TwinklingStars() {
   );
 }
 
+function ParallaxSection({
+  children,
+  speed = 0.5,
+  className = "",
+}: {
+  children: React.ReactNode;
+  speed?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, speed * 100]);
+
+  return (
+    <motion.div ref={ref} style={{ y }} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+function ProjectLightbox({
+  project,
+  isOpen,
+  onClose
+}: {
+  project: typeof PROJECTS[0];
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[100] flex items-center justify-center p-4 cursor-pointer"
+      >
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative max-w-5xl w-full bg-slate-800 rounded-2xl overflow-hidden shadow-2xl cursor-default border border-slate-700"
+        >
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 p-2 bg-slate-900/80 hover:bg-slate-900 rounded-full text-slate-300 hover:text-white transition-colors"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Image */}
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full aspect-video object-cover"
+          />
+
+          {/* Content */}
+          <div className="p-8">
+            <h3 className="text-3xl font-bold text-slate-100 mb-4">
+              {project.title}
+            </h3>
+            <p className="text-slate-300 leading-relaxed mb-6">
+              {project.description}
+            </p>
+
+            <div className="flex flex-wrap gap-2 mb-6">
+              {project.tags.map(tag => (
+                <span key={tag} className="px-3 py-1 bg-slate-900/60 text-slate-300 rounded-full text-sm border border-slate-700/40">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="flex gap-4">
+
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-700 text-slate-100 rounded-lg transition-colors border border-slate-700"
+              >
+                <Github size={20} />
+                View Code
+              </a>
+
+                href={project.external}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors"
+              >
+                <ExternalLink size={20} />
+                Live Demo
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 export default function App() {
   const [activeSection, setActiveSection] = useState("hero");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -758,19 +915,43 @@ export default function App() {
           backgroundSize: "30px 30px",
         }}
       />
-      <Snowfall
-        color="#e0f2fe"
-        snowflakeCount={65}
-        speed={[1.0, 2.0]}
-        wind={[-0.5, 1.0]}
-        radius={[0.5, 3.0]}
-      />
+      // Line ~715, replace single Snowfall dengan:
+      <>
+        {/* Background layer - slow */}
+        <Snowfall
+          color="#e0f2fe"
+          snowflakeCount={20}
+          speed={[0.3, 0.8]}
+          wind={[-0.2, 0.3]}
+          radius={[1.0, 2.0]}
+          style={{ opacity: 0.3, zIndex: 1 }}
+        />
+
+        {/* Mid layer - medium */}
+        <Snowfall
+          color="#e0f2fe"
+          snowflakeCount={25}
+          speed={[0.8, 1.5]}
+          wind={[-0.5, 0.8]}
+          radius={[1.5, 3.0]}
+          style={{ opacity: 0.5, zIndex: 2 }}
+        />
+
+        {/* Foreground layer - fast */}
+        <Snowfall
+          color="#e0f2fe"
+          snowflakeCount={15}
+          speed={[1.5, 2.5]}
+          wind={[-1.0, 1.5]}
+          radius={[2.0, 4.0]}
+          style={{ opacity: 0.7, zIndex: 3 }}
+        />
+      </>
       <Header
         activeSection={activeSection}
         scrollToSection={scrollToSection}
         isScrolling={isScrolling}
       />
-
       <nav className="hidden xl:flex fixed left-8 2xl:left-12 top-0 bottom-0 items-center z-40">
         <div className="space-y-8">
           {NAV_ITEMS.map((item) => (
@@ -817,7 +998,6 @@ export default function App() {
           ))}
         </div>
       </nav>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -1145,47 +1325,49 @@ export default function App() {
               className="relative group"
             >
               {/* Glow */}
-              <div className="absolute -inset-4 bg-linear-to-r from-sky-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+              <ParallaxSection speed={-0.3} className="relative group">
+                <div className="absolute -inset-4 bg-linear-to-r from-sky-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
 
-              {/* Border */}
-              <div className="relative z-10 rounded-xl overflow-hidden border-2 border-slate-700/60 shadow-2xl">
-                <div className="aspect-square">
-                  <img
-                    src="/avatar.png"
-                    alt="Muhammad Fadlan - Software Engineer"
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    loading="lazy"
-                    decoding="async"
-                    width={400}
-                    height={400}
-                    onLoad={(e) => {
-                      e.currentTarget.style.opacity = "1";
-                    }}
-                    style={{ opacity: 0, transition: "opacity 0.3s" }}
+                {/* Border */}
+                <div className="relative z-10 rounded-xl overflow-hidden border-2 border-slate-700/60 shadow-2xl">
+                  <div className="aspect-square">
+                    <img
+                      src="/avatar.png"
+                      alt="Muhammad Fadlan - Software Engineer"
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                      loading="lazy"
+                      decoding="async"
+                      width={400}
+                      height={400}
+                      onLoad={(e) => {
+                        e.currentTarget.style.opacity = "1";
+                      }}
+                      style={{ opacity: 0, transition: "opacity 0.3s" }}
+                    />
+                  </div>
+
+                  {/* Overlay */}
+                  <motion.div
+                    className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent"
+                    whileHover={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                   />
                 </div>
 
-                {/* Overlay */}
+                {/* Floating border */}
                 <motion.div
-                  className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent"
-                  whileHover={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 border-2 border-sky-500/30 rounded-xl"
+                  animate={{
+                    x: [0, 8, 0],
+                    y: [0, 8, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
                 />
-              </div>
-
-              {/* Floating border */}
-              <motion.div
-                className="absolute inset-0 border-2 border-sky-500/30 rounded-xl"
-                animate={{
-                  x: [0, 8, 0],
-                  y: [0, 8, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                }}
-              />
+              </ParallaxSection>
             </motion.div>
           </div>
         </section>
@@ -1193,79 +1375,93 @@ export default function App() {
         <section id="experience" className="min-h-screen py-24 scroll-mt-24">
           <NumberedHeading number="">Where I've Worked</NumberedHeading>
 
-          <div className="space-y-8 md:space-y-12">
-            {" "}
-            {EXPERIENCES.map((exp, index) => (
-              <FloatingCard key={exp.id} delay={index * 0.1}>
-                <motion.article //
-                  whileHover={{ x: 8, scale: 1.02 }}
-                  className="group p-6 rounded-xl bg-slate-800/60 backdrop-blur-sm
-                             shadow-lg hover:shadow-2xl hover:shadow-sky-500/10 transition-all
-                             border border-slate-700/60 hover:border-sky-500/30
-                             relative overflow-hidden"
-                >
-                  {/* Frost sweep on hover */}
-                  <motion.div
-                    className="absolute inset-0 bg-linear-to-br from-sky-400/5 via-transparent to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    initial={{ x: "-100%", y: "-100%" }}
-                    whileHover={{ x: 0, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                  />
-                  <header
-                    className="flex flex-col md:flex-row md:items-center
-                                   justify-between gap-3 mb-4"
-                  >
-                    <div>
-                      <h3
-                        className="text-xl font-bold text-slate-100
-                                   group-hover:text-sky-300 transition-colors"
-                      >
-                        {exp.title}{" "}
-                        <span className="text-sky-400">- {exp.company}</span>
-                      </h3>
-                    </div>
+          <div className="relative">
+            {/* Timeline line */}
+            <motion.div
+              className="absolute left-0 md:left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-sky-500 via-sky-400 to-transparent"
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              style={{ transformOrigin: "top" }}
+            />
 
-                    <p
-                      className="text-sm font-mono text-slate-400 bg-slate-900/60
-                                px-3 py-1 rounded-full inline-block w-fit border border-slate-700/40"
+            <div className="space-y-12 pl-8 md:pl-20">
+              {EXPERIENCES.map((exp, index) => (
+                <FloatingCard key={exp.id} delay={index * 0.1}>
+                  <div className="relative">
+                    {/* Timeline dot */}
+                    <motion.div
+                      className="absolute -left-[34px] md:-left-[52px] top-6 w-4 h-4 rounded-full bg-sky-400 border-4 border-slate-900 shadow-lg shadow-sky-400/50"
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 + 0.2, type: "spring" }}
+                    />
+
+                    <motion.article
+                      whileHover={{ x: 8, scale: 1.02 }}
+                      className="group p-6 rounded-xl bg-slate-800/60 backdrop-blur-sm
+                                 shadow-lg hover:shadow-2xl hover:shadow-sky-500/10 transition-all
+                                 border border-slate-700/60 hover:border-sky-500/30
+                                 relative overflow-hidden"
                     >
-                      {exp.period}
-                    </p>
-                  </header>
+                      {/* Frost sweep on hover */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-sky-400/5 via-transparent to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        initial={{ x: "-100%", y: "-100%" }}
+                        whileHover={{ x: 0, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                      />
 
-                  <p className="text-slate-300 leading-relaxed mb-5">
-                    {exp.description}
-                  </p>
+                      <header className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 relative z-10">
+                        <div>
+                          <h3 className="text-xl font-bold text-slate-100 group-hover:text-sky-300 transition-colors">
+                            {exp.title}{" "}
+                            <span className="text-sky-400">
+                              - {exp.company}
+                            </span>
+                          </h3>
+                        </div>
 
-                  <div className="flex flex-wrap gap-2 font-mono text-sm text-slate-400">
-                    {exp.skills.map((skill, i) => (
-                      <motion.span
-                        key={skill}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                        transition={{
-                          delay: i * 0.03,
-                          type: "spring",
-                          stiffness: 200,
-                        }}
-                        whileHover={{
-                          scale: 1.1,
-                          backgroundColor: "#0c4a6e",
-                          borderColor: "#38bdf8",
-                          color: "#e0f2fe",
-                        }}
-                        className="px-3 py-1 bg-slate-900/60 text-slate-300 border border-slate-700/40
-                                 rounded-full text-sm font-medium cursor-pointer
-                                 transition-all"
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
+                        <p className="text-sm font-mono text-slate-400 bg-slate-900/60 px-3 py-1 rounded-full inline-block w-fit border border-slate-700/40">
+                          {exp.period}
+                        </p>
+                      </header>
+
+                      <p className="text-slate-300 leading-relaxed mb-5 relative z-10">
+                        {exp.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-2 font-mono text-sm text-slate-400 relative z-10">
+                        {exp.skills.map((skill, i) => (
+                          <motion.span
+                            key={skill}
+                            initial={{ opacity: 0, scale: 0 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{
+                              delay: i * 0.03,
+                              type: "spring",
+                              stiffness: 200,
+                            }}
+                            whileHover={{
+                              scale: 1.1,
+                              backgroundColor: "#0c4a6e",
+                              borderColor: "#38bdf8",
+                              color: "#e0f2fe",
+                            }}
+                            className="px-3 py-1 bg-slate-900/60 text-slate-300 border border-slate-700/40 rounded-full text-sm font-medium cursor-pointer transition-all"
+                          >
+                            {skill}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </motion.article>
                   </div>
-                </motion.article>
-              </FloatingCard>
-            ))}
+                </FloatingCard>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1421,37 +1617,22 @@ export default function App() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="pt-4"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{
+                y: scrollY > 500 ? 0 : 100,
+                opacity: scrollY > 500 ? 1 : 0,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed bottom-8 right-8 z-50 flex gap-3"
             >
               <motion.a
                 href="mailto:mhmdfdln14@gmail.com"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: "0 20px 50px rgba(56, 189, 248, 0.3)",
-                  backgroundColor: "#0c4a6e",
-                  color: "#e0f2fe",
-                  borderColor: "#38bdf8",
-                }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-3 px-8 py-4 border-2 border-sky-500/40
-                           text-sky-300 rounded-lg font-mono text-lg font-semibold
-                           hover:bg-sky-900 hover:text-sky-50 transition-all duration-300
-                           shadow-xl hover:shadow-2xl group"
+                whileHover={{ scale: 1.1, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-4 bg-sky-500 text-white rounded-full shadow-2xl hover:shadow-sky-500/50 transition-all"
+                aria-label="Send email"
               >
-                <span>👋</span>
-                Say Hello
-                <motion.span
-                  initial={{ x: 0 }}
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  className="text-xl"
-                >
-                  →
-                </motion.span>
+                <Mail size={20} />
               </motion.a>
             </motion.div>
 
