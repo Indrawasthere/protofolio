@@ -144,6 +144,7 @@ function CustomCursor() {
       style={{
         left: cursorXSpring,
         top: cursorYSpring,
+        willChange: "transform",
       }}
     >
       <div className="w-full h-full rounded-full border-2 border-sky-400/60" />
@@ -153,8 +154,11 @@ function CustomCursor() {
 
 function GradientOrbs() {
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Aurora orbs */}
+    <div
+      className="fixed inset-0 overflow-hidden pointer-events-none"
+      style={{ willChange: "transform" }}
+    >
+      {/* Aurora orbs - reduced complexity */}
       <motion.div
         className="absolute -top-40 -left-40 w-96 h-96 bg-blue-400/10 rounded-full mix-blend-lighten filter blur-3xl"
         animate={{
@@ -162,7 +166,8 @@ function GradientOrbs() {
           y: [0, -50, 0],
           scale: [1, 1.1, 1],
         }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        style={{ willChange: "transform" }}
       />
       <motion.div
         className="absolute top-1/4 -right-40 w-96 h-96 bg-cyan-300/8 rounded-full mix-blend-lighten filter blur-3xl"
@@ -171,7 +176,8 @@ function GradientOrbs() {
           y: [0, 80, 0],
           scale: [1, 1.2, 1],
         }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        style={{ willChange: "transform" }}
       />
       <motion.div
         className="absolute -bottom-40 left-1/3 w-96 h-96 bg-indigo-400/8 rounded-full mix-blend-lighten filter blur-3xl"
@@ -180,31 +186,27 @@ function GradientOrbs() {
           y: [0, -60, 0],
           scale: [1, 1.15, 1],
         }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        style={{ willChange: "transform" }}
       />
-      <motion.div
-        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-400/6 rounded-full mix-blend-lighten filter blur-3xl"
-        animate={{
-          x: [0, -70, 0],
-          y: [0, 70, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-
       {/* Frost gradient overlay - creates depth */}
       <div className="absolute inset-0 bg-linear-to-b from-slate-900/20 via-transparent to-slate-900/40" />
-
-      {/* Subtle vignette effect */}
-      <div className="absolute inset-0 bg-linear-to-r from-slate-900/30 via-transparent to-slate-900/30" />
-
+      {/* Moonlight glow - follows scroll */}
+      <motion.div
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-300/5 rounded-full filter blur-3xl pointer-events-none"
+        style={{
+          y: scrollY * 0.5,
+          willChange: "transform",
+        }}
+      />{" "}
       {/* Top glow - northern lights effect */}
       <motion.div
         className="absolute top-0 left-0 right-0 h-96 bg-linear-to-b from-sky-500/5 via-cyan-500/3 to-transparent"
         animate={{
           opacity: [0.3, 0.5, 0.3],
         }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        style={{ willChange: "opacity" }}
       />
     </div>
   );
@@ -269,7 +271,7 @@ function RotatingTypewriter({
         <motion.span
           animate={{ opacity: [1, 0] }}
           transition={{ duration: 0.8, repeat: Infinity }}
-          className="text-purple-500"
+          className="text-state-500"
         >
           |
         </motion.span>
@@ -331,7 +333,7 @@ function AnimatedCounter({
   }, [value, duration, isVisible]);
 
   return (
-    <div ref={nodeRef} className="text-4xl font-bold text-purple-600">
+    <div ref={nodeRef} className="text-4xl font-bold text-sky-600">
       {count.toLocaleString()}
       {suffix}
     </div>
@@ -406,7 +408,7 @@ function Header({
           aria-label="Scroll to top"
           className="relative group"
         >
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-br from-purple-600 to-rose-500 group-hover:w-full transition-all duration-300" />
+          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-br from-sky-600 to-rose-500 group-hover:w-full transition-all duration-300" />
         </motion.button>
 
         <nav
@@ -469,14 +471,14 @@ function Header({
               ↓
             </motion.span>
 
-            <span className="absolute inset-0 bg-linear-to-br from-purple-500/0 via-purple-500/5 to-purple-500/0 translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <span className="absolute inset-0 bg-linear-to-br from-sky-500/0 via-sky-500/5 to-sky-500/0 translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </motion.a>
         </nav>
 
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileTap={{ scale: 0.9 }}
-          className="md:hidden text-gray-700 hover:text-purple-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+          className="md:hidden text-gray-700 hover:text-sky-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
           aria-label={isOpen ? "Close menu" : "Open menu"}
           aria-expanded={isOpen}
         >
@@ -508,7 +510,7 @@ function Header({
                   aria-current={activeSection === item.id ? "page" : undefined}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full" />
+                    <span className="w-2 h-2 bg-sky-500 rounded-full" />
                     {item.label}
                   </div>
                 </motion.button>
@@ -520,7 +522,7 @@ function Header({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: NAV_ITEMS.length * 0.05 }}
-                className="block w-full text-center px-4 py-3 border-2 border-purple-500 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium mt-4"
+                className="block w-full text-center px-4 py-3 border-2 border-sky-500 text-sky-600 rounded-lg hover:bg-sky-50 transition-colors font-medium mt-4"
               >
                 <div className="flex items-center justify-center gap-2">
                   <FileText size={18} />
@@ -563,8 +565,84 @@ function NumberedHeading({
       <h2 className="text-2xl md:text-4xl font-bold text-slate-100">
         {children}
       </h2>
-      <div className="flex-1 h-px bg-linear-to-r from-slate-600 via-slate-700 to-transparent ml-4" />
+      <div className="flex-1 h-px bg-linear-to-r from-slate-600 via-sky-400/20 to-transparent ml-4 relative">
+        {/* Icicle effect */}
+        <div className="absolute top-0 left-0 right-0 h-full">
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-0.5 h-2 bg-linear-to-b from-sky-400/40 to-transparent"
+              style={{ left: `${20 * i}%` }}
+              animate={{
+                height: ["4px", "8px", "4px"],
+                opacity: [0.4, 0.7, 0.4],
+              }}
+              transition={{
+                duration: 2 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+              }}
+            />
+          ))}
+        </div>
+      </div>
     </motion.div>
+  );
+}
+
+function ImageSkeleton() {
+  return (
+    <div className="w-full h-full bg-slate-800/40 animate-pulse rounded-xl flex items-center justify-center">
+      <svg
+        className="w-16 h-16 text-slate-700"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function TwinklingStars() {
+  const stars = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 2 + 1,
+    duration: Math.random() * 3 + 2,
+    delay: Math.random() * 5,
+  }));
+
+  return (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          className="absolute rounded-full bg-sky-200"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+          }}
+          animate={{
+            opacity: [0.2, 1, 0.2],
+            scale: [0.8, 1.2, 0.8],
+          }}
+          transition={{
+            duration: star.duration,
+            repeat: Infinity,
+            delay: star.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -573,6 +651,15 @@ export default function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<NodeJS.Timeout>();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const observerOptions = {
@@ -663,14 +750,21 @@ export default function App() {
     <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 text-slate-100 cursor-none md:cursor-auto overflow-x-hidden">
       <CustomCursor />
       <GradientOrbs />
+      <TwinklingStars />
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.015] mix-blend-overlay"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "30px 30px",
+        }}
+      />
       <Snowfall
         color="#e0f2fe"
-        snowflakeCount={125}
-        speed={[0.5, 2.0]}
+        snowflakeCount={65}
+        speed={[1.0, 2.0]}
         wind={[-0.5, 1.0]}
         radius={[0.5, 3.0]}
       />
-      <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-900/0 to-slate-900/20" />
       <Header
         activeSection={activeSection}
         scrollToSection={scrollToSection}
@@ -796,6 +890,19 @@ export default function App() {
             Muhammad Fadlan
           </motion.h1>
 
+          <motion.div
+            className="absolute -z-10 left-0 top-1/2 w-64 h-64 bg-sky-400/5 rounded-full filter blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
           <h2 className="text-2xl md:text-2xl lg:text-5xl font-bold mb-8 text-slate-300">
             <RotatingTypewriter
               texts={[
@@ -809,7 +916,7 @@ export default function App() {
             />
           </h2>
 
-          <motion.p className="relative z-10 text-lg text-slate-400 max-w-2xl leading-8 mb-12">
+          <motion.p className="text-lg text-slate-400 max-w-2xl leading-relaxed mb-12">
             My finale chapter of life is{" "}
             <motion.code
               whileHover={{
@@ -818,55 +925,52 @@ export default function App() {
                 transition: { type: "spring", stiffness: 300 },
               }}
               className="
-                relative inline-flex items-center align-middle
-                translate-y-px
-                px-4 py-2.5 ml-2
+                inline-block
+                px-3 py-2 md:px-4 md:py-2.5
                 bg-slate-800/60 backdrop-blur-md
-                rounded-xl font-mono text-sm
+                rounded-xl font-mono text-xs md:text-sm
                 border border-slate-700/60
                 shadow-sm
                 cursor-pointer
-                overflow-hidden
+                align-middle
                 transition-all duration-300
                 hover:bg-slate-800 hover:border-sky-500/40
                 hover:shadow-lg hover:shadow-sky-500/10
+                relative
+                max-w-full md:max-w-none
               "
+              style={{
+                verticalAlign: "middle",
+                display: "inline-block",
+              }}
             >
               {/* Hover gradient */}
-              <motion.div
-                className="absolute inset-0 z-0 bg-linear-to-r from-sky-500/10 to-cyan-500/10"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
+              <span
+                className="absolute inset-0 bg-linear-to-r from-sky-500/10 to-cyan-500/10 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"
+                aria-hidden="true"
               />
 
               {/* Shimmer */}
-              <motion.div
-                className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-sky-400/20 to-transparent"
+              <motion.span
+                className="absolute inset-0 bg-linear-to-r from-transparent via-sky-400/20 to-transparent pointer-events-none"
                 initial={{ x: "-120%" }}
                 whileHover={{ x: "120%" }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
-              />
-
-              {/* Border glow */}
-              <motion.div
-                className="absolute inset-0 z-0 rounded-xl ring-1 ring-sky-500/20"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
+                aria-hidden="true"
               />
 
               {/* Content */}
-              <span className="relative z-10 flex items-center gap-1">
+              <span className="relative z-10 inline-flex flex-wrap items-center gap-x-1.5 gap-y-1">
                 <motion.span
-                  className="mr-1.5 text-slate-400 transition-colors duration-300"
+                  className="text-slate-400 transition-colors duration-300 whitespace-nowrap text-xs md:text-sm"
                   whileHover={{ color: "#7dd3fc" }}
                 >
                   git commit -m
                 </motion.span>
 
                 <motion.span
-                  className="text-sky-400 transition-colors duration-300"
+                  className="mr-1.5 text-sky-400 transition-colors duration-300 text-xs md:text-sm warp-break-words"
+                  style={{ maxWidth: "calc(100vw - 200px)" }}
                   whileHover={{
                     color: "#38bdf8",
                     textShadow: "0 0 6px rgba(56, 189, 248, 0.4)",
@@ -874,17 +978,16 @@ export default function App() {
                 >
                   "mom, i finally did it!"
                 </motion.span>
-              </span>
 
-              {/* Cursor blink */}
-              <motion.span
-                className="relative z-10 ml-1 text-sky-500"
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 1, repeat: Infinity }}
-                whileHover={{ opacity: 0 }}
-              >
-                |
-              </motion.span>
+                <motion.span
+                  className="mr-1.5 hidden md:inline text-sky-500 ml-0.5"
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  whileHover={{ opacity: 0 }}
+                >
+                  |
+                </motion.span>
+              </span>
             </motion.code>
           </motion.p>
 
@@ -1052,8 +1155,13 @@ export default function App() {
                     alt="Muhammad Fadlan - Software Engineer"
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     loading="lazy"
+                    decoding="async"
                     width={400}
                     height={400}
+                    onLoad={(e) => {
+                      e.currentTarget.style.opacity = "1";
+                    }}
+                    style={{ opacity: 0, transition: "opacity 0.3s" }}
                   />
                 </div>
 
@@ -1093,8 +1201,16 @@ export default function App() {
                   whileHover={{ x: 8, scale: 1.02 }}
                   className="group p-6 rounded-xl bg-slate-800/60 backdrop-blur-sm
                              shadow-lg hover:shadow-2xl hover:shadow-sky-500/10 transition-all
-                             border border-slate-700/60 hover:border-sky-500/30"
+                             border border-slate-700/60 hover:border-sky-500/30
+                             relative overflow-hidden"
                 >
+                  {/* Frost sweep on hover */}
+                  <motion.div
+                    className="absolute inset-0 bg-linear-to-br from-sky-400/5 via-transparent to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    initial={{ x: "-100%", y: "-100%" }}
+                    whileHover={{ x: 0, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                  />
                   <header
                     className="flex flex-col md:flex-row md:items-center
                                    justify-between gap-3 mb-4"
@@ -1181,9 +1297,11 @@ export default function App() {
                       src={project.image}
                       alt={project.title}
                       className="w-full aspect-video object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <motion.div
-                      className="absolute inset-0 bg-linear-to-br from-purple-500/40 to-rose-500/40 mix-blend-multiply"
+                      className="absolute inset-0 bg-linear-to-br from-sky-700/60 to-sky-400 mix-blend-multiply"
                       whileHover={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     />
